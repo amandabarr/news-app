@@ -13,6 +13,11 @@ def create_user(username, email, password):
 
     return user
 
+def get_user_by_email(email, password):
+    """Return a user by email and password."""
+
+    return User.query.filter(User.email == email, User.password == password).first()    
+
 
 def create_story(source, title, author, description, story_link, image, content, published):
     """Create and return a new story"""
@@ -24,7 +29,6 @@ def create_story(source, title, author, description, story_link, image, content,
 
     return story
 
-# create_story(source='CNN', title='another fake story', author='Cindy Pretend', description='this is not even real', story_link='12345.com', image='123.img', content='yaddayadda', published='2020-08-12 02:45:30')
 
 if __name__ == '__main__':
     from server import app

@@ -6,9 +6,6 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-# app = Flask(__name__)
-# app.secret_key = 'dev'
-
 
 def connect_to_db(flask_app, db_uri='postgresql:///news', echo=True):
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
@@ -44,7 +41,7 @@ class Story(db.Model):
 
     story_id = db.Column(db.Integer,
                         autoincrement=True,
-                        primary_key=True)                 
+                        primary_key=True)                                   
     source = db.Column(db.String, nullable=False)
     title = db.Column(db.String, unique=True, nullable=False)
     author = db.Column(db.String, nullable=False)
@@ -53,6 +50,8 @@ class Story(db.Model):
     image = db.Column(db.String, nullable=False)
     content = db.Column(db.Text, nullable=False)
     published = db.Column(db.DateTime, nullable=False)
+
+    # story_topics = db.relationship("StoryTopic", secondary="story_stopics")
 
     def __repr__(self):
         return f'<Story source={self.source} title={self.title}>' 
@@ -67,12 +66,11 @@ class Topic(db.Model):
                         autoincrement=True,
                         primary_key=True)                                    
     topic_category = db.Column(db.String, nullable=False)
-    topic_keyword = db.Column(db.String, nullable=False)
+    
     
 
     def __repr__(self):
-        return f'<Topic category={self.topic_category} keyword={self.topic_keyword}>'
-
+        return f'<Topic category={self.topic_category}>'
 
 
 
@@ -95,27 +93,9 @@ class StoryTopic(db.Model):
         return f'<StoryTopic story_topic_id={self.story_topic_id} story_id={self.story_id} topic_id={self.topic_id}>'
 
 
-# class StorySource(db.Model):
-#     """A source of a story."""
-
-#     __tablename__ = "story_sources"
-
-#     story_source_id = db.Column(db.Integer,
-#                         autoincrement=True,
-#                         primary_key=True)                 
-#     source = db.Column(db.String, db.ForeignKey('stories.source'))
-#     story_id = db.Column(db.Integer, db.ForeignKey('stories.story_id'))
-
-#     story_id = db.relationship('Story', backref='story_id')
-#     source = db.relationship('Story', backref='story_id')
-    
-
-#     def __repr__(self):
-#         return f'<StorySource story_source_id={self.story_source_id} source={self.source} story_id={self.story_id}>'
-
 
 class SavedStory(db.Model):
-    """A topic of a story."""
+    """A story saved by the user."""
 
     __tablename__ = "saved_stories"
 
@@ -124,11 +104,13 @@ class SavedStory(db.Model):
                         primary_key=True)                 
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     story_id = db.Column(db.Integer, db.ForeignKey('stories.story_id'))
-    user_tag = db.Column(db.String)
+    # saved_story_tag_id = db.Column(db.Integer, db.ForeignKey('saved_story_tags.saved_story_tag_id'))
     user_comment = db.Column(db.Text)
+
 
     user_save = db.relationship('User', backref='saved_stories')
     story_info = db.relationship('Story', backref='saved_stories')
+    # saved_tag = db.relationship('SavedStory', backref='saved_stories')
     
 
     def __repr__(self):
@@ -136,7 +118,7 @@ class SavedStory(db.Model):
 
 
 class SavedStoryTag(db.Model):
-    """A topic of a story."""
+    """User tag for a saved story."""
 
     __tablename__ = "saved_story_tags"
 
@@ -145,15 +127,14 @@ class SavedStoryTag(db.Model):
                         primary_key=True)                 
     saved_story_id = db.Column(db.Integer, db.ForeignKey('saved_stories.saved_story_id'))
     # user_tag = db.Column(db.String, db.ForeignKey('saved_stories.user_tag'))
-
-
-    saved_id = db.relationship('SavedStory', backref='saved_story_tags')
-    # saved_tag = db.relationship('SavedStory')
-    # double check the connection with this table
+    user_tag = db.Column(db.String)
+    
+    
+    tag = db.relationship('SavedStory', backref='saved_story_tags')
     
 
     def __repr__(self):
-        return f'<SavedStoryTag saved_story_tag_id={self.saved_story_tag_id} saved_story_id={self.source}>'
+        return f'<SavedStoryTag saved_story_tag_id={self.saved_story_tag_id}>'
 
 
 if __name__ == '__main__':
