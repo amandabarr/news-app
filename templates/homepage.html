@@ -1,32 +1,36 @@
 {% extends 'base.html' %}
-{% block title %}News Home!{% endblock %}
 
-{% block body %}
-  <h1>Welcome!</h1>
+  {% block content %}
 
-  <div>
+    <div class="topnav">
+      <a href="templates/homepage.html">News</a>
+      <a href="profile.html">Profile</a>
+      <form method="POST">
+        <input name="topic_keyword" type="text" placeholder="search topics" />
+        <button id="keyword" type="submit">Search</button>
+      </form>
+    </div>
 
-    {% for article in articles %}
+    <div>
+      {% for article in articles %}
+      <a href='{{ article["url"] }}'>
+        <h2> News:  {{ article["title"] }}  </h2>
+      </a>
+      <h3> Written by:  {{ article["author"] }} </h3>
+      <h4> Published: {{ article["publishedAt"] }} </h4>
+      <img src="{{ article["urlToImage"] }}"/>
+      <p> Description  {{ article["description"] }} </p>
+      {% endfor %}
+    </div>
 
-    <a href='{{ article["url"] }}'>
-    <h2> News:  {{ article["title"] }}  </h2>
+  <script src="/static/js/homepage.js"></script>
 
-    
-
-    <h3> Written by:  {{ article["author"] }} </h3>
-    <h4> Published: {{ article["publishedAt"] }} </h4>
-
-    </a>
-
-    <img src={{ article["urlToImage"] }}/>
-  </a>
-
-    <p> Description  {{ article["description"] }} </p>
-    {% endfor %}
-
-  </div>
+  {% endblock %}
   
-{% endblock %}
 
 
+
+
+
+  
 

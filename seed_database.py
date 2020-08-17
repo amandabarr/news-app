@@ -31,3 +31,19 @@ from faker import Faker
     
 #     print(fake_info)
 
+
+with open('./data/stories.json') as file:
+   articles = json.loads(file.read())
+
+   for article in articles:
+      source = article["source"]["name"]
+      title = article["title"]
+      author = article["author"]
+      description = article["description"]
+      story_link = article["url"]
+      image = article["urlToImage"]
+      content = article["content"]
+      published = article["publishedAt"]
+
+print(f"source = {source}, title = {title}, author = {author}, description = {description}, story_link = {story_link}, image = {image}, content = {content}, published = {published}")
+

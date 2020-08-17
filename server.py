@@ -2,6 +2,7 @@
 
 from flask import Flask, render_template, request, flash, session, redirect
 from model import connect_to_db
+import json
 import os
 from newsapi import NewsApiClient
 import pprint
@@ -22,6 +23,12 @@ app.jinja_env.undefined = StrictUndefined
 # response_json = response.json()
 # pprint.pprint(response_json)
 
+@app.route("/login")
+def user_login():
+    """Allow user to log in or create new account"""
+
+    return render_template("login.html")
+
 
 @app.route("/")
 def fetch_stories():
@@ -29,58 +36,52 @@ def fetch_stories():
 
     
     url = ('http://newsapi.org/v2/everything?'
-       'q=crocodile&'
-       'from=2020-08-13&'
+       'q=mountains&'
+       'from=2020-08-16&'
        'sortBy=popularity&'
        'apiKey=' + API_SECRET_KEY)
        
 
   
     response = requests.get(url) 
-    print(response)
+    
     response_json = response.json()
-    print(response_json)
+    
     articles = response_json['articles']  
-    print(articles)
-
-    # title = []
-    # author = []
-    # description = []
-    # story_link = []
-    # image = []
-    # content = []
-    # published = []
    
 
-    # for article in articles:
-    #     # source = articles.get('source')
-
-    #     title.append(article['title'])
-    #     print(title)
-    #     author.append(article['author'])
-    #     print(author)
-    #     description.append(article['description'])
-    #     print(description)
-    #     story_link.append(article['url'])
-    #     image.append(article['urlToImage'])
-    #     content.append(article['content'])
-    #     published.append(article['publishedAt'])
-
     return render_template("homepage.html", articles=articles)
-    # ,articles=articles, title=title, author=author, description=description, story_link=story_link, image=image, content=content, published=published)    
 
 
+@app.route("/", methods=["GET", "POST"])
+def topic_search():
 
+    topic_keyword = request.form["topic_keyword"]
     
 
-# @app.route("/")
-# def homepage():
-#     """View Homepage"""
+    url = ('http://newsapi.org/v2/everything?'
+        'q=' + topic_keyword + '&' +
+        'from=2020-08-16&'
+        'sortBy=popularity&'
+        'apiKey=' + API_SECRET_KEY)
 
-#     return render_template("homepage.html")
+    response = requests.get(url) 
+    
+    response_json = response.json()
+    
+    articles = response_json['articles'] 
 
+    with open("./data/stories.json", "w") as outfile:
+        json.dump(articles, outfile)
 
+    return render_template("homepage.html", topic_keyword=topic_keyword, articles=articles)
+ 
 
+@app.route("/profile")
+def show_user_profile():
+    """View user's profile and saved articles"""
+
+    return render_template("profile.html")
 
 
 

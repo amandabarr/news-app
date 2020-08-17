@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+  {% block content %}
+    <h2>Welcome</h2>
+      <br>
+      <br>
+        <h3>Log In To Your Account</h3>
+      
+    <div id="login">
+      <form>
+        <p>
+          Username:
+            <input type="text"/>
+                <br>
+                <br>
+          Password:
+            <input type="password"/>
+                <br>
+          <button>Log In</button>
+        </p>
+      </form>
+
+      <h3>Don't have an account?</h3>
+        <button id="create" type="submit">Create Account</button>
+
+    </div>
+
+<script src="/static/js/login.js"></script>
+
+{% endblock %}
+ 
