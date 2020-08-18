@@ -44,11 +44,11 @@ class Story(db.Model):
                         primary_key=True)                                   
     source = db.Column(db.String, nullable=False)
     title = db.Column(db.String, unique=True, nullable=False)
-    author = db.Column(db.String, nullable=False)
+    author = db.Column(db.String)
     description = db.Column(db.Text, nullable=False)
     story_link = db.Column(db.String, unique=True, nullable=False)
     image = db.Column(db.String, nullable=False)
-    content = db.Column(db.Text, nullable=False)
+    content = db.Column(db.Text)
     published = db.Column(db.DateTime, nullable=False)
 
     # story_topics = db.relationship("StoryTopic", secondary="story_stopics")

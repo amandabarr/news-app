@@ -5,26 +5,20 @@
     <div class="topnav">
       <a href="templates/homepage.html">News</a>
       <a href="profile.html">Profile</a>
-      <form method="POST">
-        <input name="topic_keyword" type="text" placeholder="search topics" />
-        <button id="keyword" type="submit">Search</button>
+      <form id="search_form" method="POST">
+        <input id="topic_keyword" type="text" placeholder="search topics" />
+        <button type="submit">Search</button>
       </form>
     </div>
 
-    <div>
-      {% for article in articles %}
-      <a href='{{ article["url"] }}'>
-        <h2> News:  {{ article["title"] }}  </h2>
-      </a>
-      <h3> Written by:  {{ article["author"] }} </h3>
-      <h4> Published: {{ article["publishedAt"] }} </h4>
-      <img src="{{ article["urlToImage"] }}"/>
-      <p> Description  {{ article["description"] }} </p>
-      {% endfor %}
+    <div id="news">
+      {% include "articles.html" %}
     </div>
 
-  <script src="/static/js/homepage.js"></script>
-
+  <script src="/static/js/search.js"></script>
+  <script src="/static/js/save.js"></script>
+  
+  
   {% endblock %}
   
 

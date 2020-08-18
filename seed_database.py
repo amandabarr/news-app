@@ -6,15 +6,15 @@ from random import choice, randint
 from datetime import datetime
 from faker import Faker
 
-# import crud
-# import model
-# import server
+import crud
+import model
+import server
 
-# os.system('dropdb users')
-# os.system('createdb users')
+os.system('dropdb news')
+os.system('createdb news')
 
-# model.connect_to_db(server.app)
-# model.db.create_all()
+model.connect_to_db(server.app)
+model.db.create_all()
 
 # # for num in range(10):
 #     username = f'testuser{num}'
@@ -45,5 +45,6 @@ with open('./data/stories.json') as file:
       content = article["content"]
       published = article["publishedAt"]
 
-print(f"source = {source}, title = {title}, author = {author}, description = {description}, story_link = {story_link}, image = {image}, content = {content}, published = {published}")
+      new_story = crud.create_story(source, title, author, description, story_link, image, content, published)
 
+      
