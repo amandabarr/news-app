@@ -29,31 +29,6 @@ def get_news_articles():
     pass
 
 
-
-@app.route("/login", methods = ["GET", "POST"])
-def user_login():
-    """Allow user to log in or option to create new account"""
-
-    username = request.form.get("username")
-    
-    password = request.form.get("password")
-
-    user = crud.get_user(username, password)
-
-    if user:
-        session["logged_in"] = True
-        return render_template("homepage.html")
-    else:
-        flash("Please enter a valid username and password")    
-        return render_template("login.html")
-        
-
-
-def create_account(): 
-    """Allow a new user to create an account""" 
-    pass
-
-
 @app.route("/")
 def fetch_home():
     """View Homepage"""
@@ -65,20 +40,20 @@ def fetch_stories():
     """Return news stories as JSON"""
 
     #decide whether to use q (keyword in any part of the article) or qInTitle (keyword search in title)
-    
+
     url = ('http://newsapi.org/v2/everything?'
        'qInTitle=mountains&'
-       'from=2020-08-16&'
+       'from=2020-08-19&'
        'sortBy=popularity&'
        'apiKey=' + API_SECRET_KEY)
-       
-    response = requests.get(url) 
-    
+
+    response = requests.get(url)
+
     response_json = response.json()
-    
+
     articles = response_json['articles']
 
-    return jsonify(articles)   
+    return jsonify(articles)
 
 
 @app.route("/search", methods=["GET", "POST"])
@@ -88,17 +63,40 @@ def topic_search():
 
     url = ('http://newsapi.org/v2/everything?'
         'q=' + topic_keyword + '&' +
-        'from=2020-08-16&'
+        'from=2020-08-19&'
         'sortBy=popularity&'
         'apiKey=' + API_SECRET_KEY)
 
-    response = requests.get(url) 
-    
+    response = requests.get(url)
+
     response_json = response.json()
-    
-    articles = response_json['articles'] 
-    
+
+    articles = response_json['articles']
+
     return jsonify(articles)
+
+
+@app.route("/login", methods = ["GET", "POST"])
+def user_login():
+    """Allow user to log in or option to create new account"""
+
+    username = request.form.get("username")
+
+    password = request.form.get("password")
+
+    user = crud.get_user(username, password)
+    # session["user"]
+
+    if user:
+        return redirect("/")
+    else:
+        flash("Please enter a valid username and password")
+        return render_template("login.html")
+
+
+def create_account():
+    """Allow a new user to create an account"""
+    pass
 
 
 @app.route("/profile")
