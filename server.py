@@ -1,6 +1,6 @@
 """Server for news app."""
 
-from flask import Flask, render_template, request, flash, session, redirect
+from flask import Flask, render_template, request, flash, session, redirect, jsonify
 from model import connect_to_db
 import json
 import os
@@ -20,16 +20,49 @@ app.secret_key = 'dev'
 app.jinja_env.undefined = StrictUndefined
 
 
-@app.route("/login")
+@app.route("/v2")
+def root():
+    return render_template("root.html")
+
+@app.route("/v2/api/top-posts")
+def get_news_articles():
+    pass
+
+
+
+@app.route("/login", methods = ["GET", "POST"])
 def user_login():
     """Allow user to log in or option to create new account"""
 
-    return render_template("login.html")
+    username = request.form.get("username")
+    
+    password = request.form.get("password")
+
+    user = crud.get_user(username, password)
+
+    if user:
+        session["logged_in"] = True
+        return render_template("homepage.html")
+    else:
+        flash("Please enter a valid username and password")    
+        return render_template("login.html")
+        
+
+
+def create_account(): 
+    """Allow a new user to create an account""" 
+    pass
 
 
 @app.route("/")
+def fetch_home():
+    """View Homepage"""
+
+    return render_template("homepage.html")
+
+@app.route("/stories")
 def fetch_stories():
-    """View News Homepage"""
+    """Return news stories as JSON"""
 
     #decide whether to use q (keyword in any part of the article) or qInTitle (keyword search in title)
     
@@ -39,31 +72,18 @@ def fetch_stories():
        'sortBy=popularity&'
        'apiKey=' + API_SECRET_KEY)
        
-
-  
     response = requests.get(url) 
     
     response_json = response.json()
     
-    articles = response_json['articles']  
+    articles = response_json['articles']
 
-    # for article in articles:
-    #     source = article["source"]["name"]
-    #     title = article["title"]
-    #     author = article["author"]
-    #     description = article["description"]
-    #     story_link = article["url"]
-    #     image = article["urlToImage"]
-    #     content = article["content"]
-    #     published = article["publishedAt"]
-
-    #     new_story = crud.create_story(source, title, author, description, story_link, image, content, published)
-
-    return render_template("homepage.html", articles=articles)
+    return jsonify(articles)   
 
 
 @app.route("/search", methods=["GET", "POST"])
 def topic_search():
+    """Search for articles that include a specific keyword"""
     topic_keyword = request.args["topic_keyword"]
 
     url = ('http://newsapi.org/v2/everything?'
@@ -77,16 +97,8 @@ def topic_search():
     response_json = response.json()
     
     articles = response_json['articles'] 
-
-    with open("./data/stories.json", "w") as outfile:
-        json.dump(articles, outfile)
     
-    return render_template("articles.html", topic_keyword=topic_keyword, articles=articles)
-
-# @app.route("/save")
-# def save_article():
-
-    
+    return jsonify(articles)
 
 
 @app.route("/profile")

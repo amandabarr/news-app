@@ -13,10 +13,10 @@ def create_user(username, email, password):
 
     return user
 
-def get_user_by_email(email, password):
-    """Return a user by email and password."""
+def get_user(username, password):
+    """Return a user by username and password."""
 
-    return User.query.filter(User.email == email, User.password == password).first()    
+    return User.query.filter(User.username == username, User.password == password).first()    
 
 
 def create_story(source, title, author, description, story_link, image, content, published):
