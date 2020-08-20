@@ -33,7 +33,11 @@ def get_news_articles():
 def fetch_home():
     """View Homepage"""
 
-    return render_template("homepage.html")
+    if "user" in session:
+        username = session["user"]
+        return render_template("homepage.html")
+    else:
+        redirect("/login")
 
 @app.route("/stories")
 def fetch_stories():
@@ -85,13 +89,19 @@ def user_login():
     password = request.form.get("password")
 
     user = crud.get_user(username, password)
-    # session["user"]
+
 
     if user:
+        session["user"] = username
         return redirect("/")
     else:
         flash("Please enter a valid username and password")
         return render_template("login.html")
+
+@app.route("/logout")
+def user_logout():
+    session.pop("username", None)
+    return redirect(url_for("login"))
 
 
 def create_account():

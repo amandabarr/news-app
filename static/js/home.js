@@ -16,6 +16,7 @@ function buildArticle(articleJson) {
     <a href='${article["url"]}'>
     <h2>${article["title"]}</h2>
     </a>
+    <h3>${article["source"]["name"]}</h3>
     <h3> Written by:  ${article["author"]} </h3>
     <h4> Published: ${article["publishedAt"]} </h4>
     <img src="${article["urlToImage"]}"/>
