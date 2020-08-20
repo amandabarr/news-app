@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, request, flash, session, redirect, jsonify
 from model import connect_to_db
-from datetime import datetime
+from datetime import date, datetime
 import json
 import os
 from newsapi import NewsApiClient
@@ -13,6 +13,7 @@ import crud
 from jinja2 import StrictUndefined
 
 API_SECRET_KEY = os.environ.get('API_KEY')
+TODAY = date.today().strftime("%Y-/%m-/%d")
 
 newsapi = NewsApiClient(api_key=API_SECRET_KEY)
 
@@ -48,7 +49,7 @@ def fetch_stories():
 
     url = ('http://newsapi.org/v2/everything?'
        'qInTitle=mindfulness&'
-       'from=2020-08-19&'
+       'from=' + TODAY +'&'
        'sortBy=popularity&'
        'apiKey=' + API_SECRET_KEY)
 
@@ -68,7 +69,7 @@ def topic_search():
 
     url = ('http://newsapi.org/v2/everything?'
         'q=' + topic_keyword + '&' +
-        'from=2020-08-19&'
+        'from=' + TODAY +'&'
         'sortBy=popularity&'
         'apiKey=' + API_SECRET_KEY)
 
