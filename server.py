@@ -2,6 +2,7 @@
 
 from flask import Flask, render_template, request, flash, session, redirect, jsonify
 from model import connect_to_db
+from datetime import datetime
 import json
 import os
 from newsapi import NewsApiClient
@@ -46,7 +47,7 @@ def fetch_stories():
     #decide whether to use q (keyword in any part of the article) or qInTitle (keyword search in title)
 
     url = ('http://newsapi.org/v2/everything?'
-       'qInTitle=mountains&'
+       'qInTitle=mindfulness&'
        'from=2020-08-19&'
        'sortBy=popularity&'
        'apiKey=' + API_SECRET_KEY)
