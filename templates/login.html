@@ -5,7 +5,7 @@
       <br>
       <br>
         <h3>Log In To Your Account</h3>
-      
+
     <div id="login">
       <form action = "/login" method="POST">
         <p>
@@ -21,7 +21,22 @@
       </form>
 
       <h3>Don't have an account?</h3>
-        <button id="create" type="submit">Create Account</button>
+          <form action = "/create_account" method="POST">
+            <p>
+              Email:
+                <input type="text" name="email">
+                    <br>
+                    <br>
+              Username:
+                <input type="text" name="username">
+                    <br>
+                    <br>
+              Password:
+                <input type="password" name="password">
+                    <br>
+            </p>
+          </form>
+          <button id="create" type="submit">Create Account</button>
 
     </div>
   </center>
@@ -29,4 +44,3 @@
 <script src="/static/js/login.js"></script>
 
 {% endblock %}
- 

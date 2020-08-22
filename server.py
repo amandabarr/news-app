@@ -39,7 +39,7 @@ def fetch_home():
         username = session["user"]
         return render_template("homepage.html")
     else:
-        redirect("/login")
+        return redirect("/login")
 
 @app.route("/stories")
 def fetch_stories():
@@ -106,9 +106,20 @@ def user_logout():
     return redirect(url_for("login"))
 
 
-def create_account():
-    """Allow a new user to create an account"""
-    pass
+# def create_account():
+#     """Allow a new user to create an account"""
+
+#     username = request.form.get('username')
+#     password = request.form.get('password')
+
+#     user = crud.get_user(username, password)
+
+#     if user:
+#         flash('This username already exists! Try again.')
+#     else:
+#         crud.create_user(email, password)
+#         flash('Account created! Please log in.')
+#     pass
 
 
 @app.route("/profile")
@@ -116,7 +127,6 @@ def show_user_profile():
     """View user's profile and saved articles"""
 
     return render_template("profile.html")
-
 
 
 
