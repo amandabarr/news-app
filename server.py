@@ -81,6 +81,10 @@ def topic_search():
 
     return jsonify(articles)
 
+@app.route("/save_article")
+def save_article_to_favorites():
+    return redirect("/profile")
+
 
 @app.route("/login", methods = ["GET", "POST"])
 def user_login():

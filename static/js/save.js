@@ -11,13 +11,4 @@ function toggleFavorite(favoriteButton) {
         favoriteButton.innerText = 'Save to Favorites';
     }
 
-    // const favoriteButtons = document.querySelectorAll('.favorite');
-
-    // favoriteButtons.forEach(favoriteButton => {
-
-    //     favoriteButton.addEventListener('click', () => {
-            
-    //     });
-    // });
-
 }

@@ -16,18 +16,25 @@ def create_user(username, email, password):
 def get_user(username, password):
     """Return a user by username and password."""
 
-    return User.query.filter(User.username == username, User.password == password).first()    
+    return User.query.filter(User.username == username, User.password == password).first()
 
 
 def create_story(source, title, author, description, story_link, image, content, published):
     """Create and return a new story"""
 
-    story = Story(source=source, title=title, author=author, description=description, story_link=story_link, image=image, content=content, published=published)  
+    story = Story(source=source, title=title, author=author, description=description, story_link=story_link, image=image, content=content, published=published)
 
     db.session.add(story)
     db.session.commit()
 
     return story
+
+def save_story(user_id, story_id):
+    """Save a story to user's favorites"""
+    saved_story = SavedStory(user_id=user_id, story_id=story_id)
+
+    db.session.add(saved_story)
+    db.session.commit()
 
 
 if __name__ == '__main__':
