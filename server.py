@@ -59,10 +59,6 @@ def fetch_stories():
 
     articles = response_json['articles']
 
-
-
-    crud.create_story
-
     return jsonify(articles)
 
 
@@ -83,7 +79,21 @@ def topic_search():
 
     articles = response_json['articles']
 
+    for article in articles:
+        source = article["source"]["name"]
+        title= article["title"]
+        author = article["author"]
+        description = article["description"]
+        story_link = article["url"]
+        image = article["urlToImage"]
+        content = article["content"]
+        published = article["publishedAt"]
 
+        story = crud.get_story(source, title, author, description)
+        if story:
+            print("hello")
+        else:
+            crud.create_story(source, title, author, description, story_link, image, content, published)
 
     return jsonify(articles)
 
