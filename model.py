@@ -20,18 +20,18 @@ def connect_to_db(flask_app, db_uri='postgresql:///news', echo=True):
 
 class User(db.Model):
     """A user."""
-   
+
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer,
                         autoincrement=True,
-                        primary_key=True)                 
+                        primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
 
     def __repr__(self):
-        return f'<User username={self.username} email={self.email}>' 
+        return f'<User username={self.username} email={self.email}>'
 
 
 class Story(db.Model):
@@ -41,20 +41,20 @@ class Story(db.Model):
 
     story_id = db.Column(db.Integer,
                         autoincrement=True,
-                        primary_key=True)                                   
+                        primary_key=True)
     source = db.Column(db.String, nullable=False)
     title = db.Column(db.String, unique=True, nullable=False)
     author = db.Column(db.String)
     description = db.Column(db.Text, nullable=False)
     story_link = db.Column(db.String, unique=True, nullable=False)
-    image = db.Column(db.String, nullable=False)
-    content = db.Column(db.Text)
+    image = db.Column(db.String, nullable=True)
+    content = db.Column(db.Text, nullable=True)
     published = db.Column(db.DateTime, nullable=False)
 
     # story_topics = db.relationship("StoryTopic", secondary="story_stopics")
 
     def __repr__(self):
-        return f'<Story source={self.source} title={self.title}>' 
+        return f'<Story source={self.source} title={self.title}>'
 
 
 class Topic(db.Model):
@@ -64,10 +64,10 @@ class Topic(db.Model):
 
     topic_id = db.Column(db.Integer,
                         autoincrement=True,
-                        primary_key=True)                                    
+                        primary_key=True)
     topic_category = db.Column(db.String, nullable=False)
-    
-    
+
+
 
     def __repr__(self):
         return f'<Topic category={self.topic_category}>'
@@ -81,13 +81,13 @@ class StoryTopic(db.Model):
 
     story_topic_id = db.Column(db.Integer,
                         autoincrement=True,
-                        primary_key=True)                 
+                        primary_key=True)
     story_id = db.Column(db.Integer, db.ForeignKey('stories.story_id'))
     topic_id = db.Column(db.Integer, db.ForeignKey('topics.topic_id'))
 
     story = db.relationship('Story', backref='story_topics')
     topic = db.relationship('Topic', backref='story_topics')
-    
+
 
     def __repr__(self):
         return f'<StoryTopic story_topic_id={self.story_topic_id} story_id={self.story_id} topic_id={self.topic_id}>'
@@ -101,17 +101,17 @@ class SavedStory(db.Model):
 
     saved_story_id = db.Column(db.Integer,
                         autoincrement=True,
-                        primary_key=True)                 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    story_id = db.Column(db.Integer, db.ForeignKey('stories.story_id'))
+                        primary_key=True)
+    user_id = db.Column('user_id', db.Integer, db.ForeignKey('users.user_id'))
+    story_id = db.Column('story_id', db.Integer, db.ForeignKey('stories.story_id'))
     # saved_story_tag_id = db.Column(db.Integer, db.ForeignKey('saved_story_tags.saved_story_tag_id'))
     user_comment = db.Column(db.Text)
 
-
-    user_save = db.relationship('User', backref='saved_stories')
-    story_info = db.relationship('Story', backref='saved_stories')
+    user = db.relationship('User', backref='saved_stories')
+    story = db.relationship('Story', backref='saved_stories')
     # saved_tag = db.relationship('SavedStory', backref='saved_stories')
-    
+
+    db.UniqueConstraint('user_id', 'story_id', name='uix_1')
 
     def __repr__(self):
         return f'<SavedStory saved_story_id={self.saved_story_id} user_id={self.user_id} story_id={self.story_id}>'
@@ -124,14 +124,14 @@ class SavedStoryTag(db.Model):
 
     saved_story_tag_id = db.Column(db.Integer,
                         autoincrement=True,
-                        primary_key=True)                 
+                        primary_key=True)
     saved_story_id = db.Column(db.Integer, db.ForeignKey('saved_stories.saved_story_id'))
     # user_tag = db.Column(db.String, db.ForeignKey('saved_stories.user_tag'))
     user_tag = db.Column(db.String)
-    
-    
+
+
     tag = db.relationship('SavedStory', backref='saved_story_tags')
-    
+
 
     def __repr__(self):
         return f'<SavedStoryTag saved_story_tag_id={self.saved_story_tag_id}>'

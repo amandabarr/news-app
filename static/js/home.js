@@ -13,14 +13,14 @@ function buildArticles(articlesJson) {
 
 function buildArticle(articleJson) {
     return `
-    <a href='${article["url"]}'>
-    <h2>${article["title"]}</h2>
+    <a href='${articleJson["url"]}'>
+    <h2>${articleJson["title"]}</h2>
     </a>
-    <h3>${article["source"]["name"]}</h3>
-    <h3> Written by:  ${article["author"]} </h3>
-    <h4> Published: ${article["publishedAt"]} </h4>
-    <img src="${article["urlToImage"]}"/>
-    <p>${article["description"]}</p>
-    <button action="/save_article" class="favorite" onclick="toggleFavorite(this)">Save to Favorites</button>
+    <h3>${articleJson["source"]["name"]}</h3>
+    <h3> Written by:  ${articleJson["author"]} </h3>
+    <h4> Published: ${articleJson["publishedAt"]} </h4>
+    <img src="${articleJson["urlToImage"]}"/>
+    <p>${articleJson["description"]}</p>
+    <button class="favorite" onclick="toggleFavorite(this, ${articleJson["storyId"]})">Save to Favorites</button>
     `;
 }

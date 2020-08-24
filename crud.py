@@ -1,6 +1,6 @@
 """CRUD operations. """
 
-from model import db, User, Story, connect_to_db
+from model import db, User, SavedStory, Story, connect_to_db
 from datetime import datetime
 
 def create_user(username, email, password):
@@ -32,6 +32,10 @@ def create_story(source, title, author, description, story_link, image, content,
 def get_story(source, title, author, description):
 
     return Story.query.filter(Story.source == source, Story.title == title, Story.author == author, Story.description == description).first()
+
+def get_story_by_id(story_id):
+
+    return Story.query.filter(Story.story_id == story_id)
 
 def save_story(user_id, story_id, user_comment = ""):
     """Save a story to user's favorites"""

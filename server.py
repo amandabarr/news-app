@@ -59,6 +59,8 @@ def fetch_stories():
 
     articles = response_json['articles']
 
+    articles = save_article_to_db(articles)
+
     return jsonify(articles)
 
 
@@ -79,6 +81,11 @@ def topic_search():
 
     articles = response_json['articles']
 
+    articles = save_article_to_db(articles)
+
+    return jsonify(articles)
+
+def save_article_to_db(articles):
     for article in articles:
         source = article["source"]["name"]
         title= article["title"]
@@ -90,19 +97,24 @@ def topic_search():
         published = article["publishedAt"]
 
         story = crud.get_story(source, title, author, description)
-        if story:
-            print("hello")
-        else:
-            crud.create_story(source, title, author, description, story_link, image, content, published)
+        if not story:
+            story = crud.create_story(source, title, author, description, story_link, image, content, published)
 
-    return jsonify(articles)
+        article["storyId"] = story.story_id
 
-@app.route("/save_article")
+    return articles
+
+@app.route("/save_article", methods = ["GET", "POST"])
 def save_article_to_favorites():
+    # crud function to save article under specific user.  Need to get primary keys user_id and story_id and option to comment/tag
+    story_id = request.form.get("storyId")
+    # session["user_id"]
 
-    # check to see if article already in the database
-    # if not, first create the story with crud function
-    return jsonify({"response": "ok"})
+    crud.save_story(session["user_id"], story_id)
+
+    return jsonify({"success": True})
+
+    # return jsonify({"response": "ok"})
     # on front end, event listener or re-use existing, test that event listener is working by printing, make network request, check that
     # server is getting response, form.get vs params,
 
@@ -120,6 +132,10 @@ def user_login():
 
     if user:
         session["user"] = username
+        session["password"] = password
+        session["user_id"] = user.user_id
+        print(session)
+        print(session['user_id'])
         return redirect("/")
     else:
         flash("Please enter a valid username and password")
