@@ -21,6 +21,6 @@ function buildArticle(articleJson) {
     <h4> Published: ${article["publishedAt"]} </h4>
     <img src="${article["urlToImage"]}"/>
     <p>${article["description"]}</p>
-    <button formaction="/save_article" class="favorite" onclick="toggleFavorite(this)">Save to Favorites</button>
+    <button action="/save_article" class="favorite" onclick="toggleFavorite(this)">Save to Favorites</button>
     `;
 }

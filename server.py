@@ -59,6 +59,10 @@ def fetch_stories():
 
     articles = response_json['articles']
 
+
+
+    crud.create_story
+
     return jsonify(articles)
 
 
@@ -79,11 +83,18 @@ def topic_search():
 
     articles = response_json['articles']
 
+
+
     return jsonify(articles)
 
 @app.route("/save_article")
 def save_article_to_favorites():
-    return redirect("/profile")
+
+    # check to see if article already in the database
+    # if not, first create the story with crud function
+    return jsonify({"response": "ok"})
+    # on front end, event listener or re-use existing, test that event listener is working by printing, make network request, check that
+    # server is getting response, form.get vs params,
 
 
 @app.route("/login", methods = ["GET", "POST"])

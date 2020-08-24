@@ -29,9 +29,13 @@ def create_story(source, title, author, description, story_link, image, content,
 
     return story
 
-def save_story(user_id, story_id):
+def get_story(source, title, author, description):
+
+    return Story.query.filter(Story.source == source, Story.title == title, Story.author == author, Story.description == description).first()
+
+def save_story(user_id, story_id, user_comment = ""):
     """Save a story to user's favorites"""
-    saved_story = SavedStory(user_id=user_id, story_id=story_id)
+    saved_story = SavedStory(user_id=user_id, story_id=story_id, user_comment=user_comment)
 
     db.session.add(saved_story)
     db.session.commit()
