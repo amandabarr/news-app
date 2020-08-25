@@ -162,12 +162,44 @@ def user_logout():
 #         flash('Account created! Please log in.')
 #     pass
 
-
 @app.route("/profile")
 def show_user_profile():
-    """View user's profile and saved articles"""
 
     return render_template("profile.html")
+
+
+@app.route("/profile_stories")
+def user_profile_data():
+    """View user's profile and saved articles"""
+
+    user_id = session["user_id"]
+
+    profile_stories = crud.get_saved_stories_by_user(user_id)
+    print(profile_stories)
+
+    story_list = [story_db_to_json(story, True) for story in profile_stories]
+
+    return jsonify(story_list)
+
+def story_db_to_json(story, favorite):
+
+    return {
+            "author": story.author,
+            "content": story.content,
+            "description": story.description,
+            "favorite": favorite,
+            "publishedAt": story.published,
+            "source": {
+                "id": None,
+                "name": story.source
+            },
+            "storyId": story.story_id,
+            "title": story.title,
+            "url": story.story_link,
+            "urlToImage": story.image
+            }
+
+    return jsonify({})
 
 
 
@@ -175,4 +207,3 @@ if __name__ == '__main__':
     connect_to_db(app)
     app.run(host='0.0.0.0', debug=True)
 
-    # client.run(os.environ['API_KEY'])

@@ -44,6 +44,12 @@ def save_story(user_id, story_id, user_comment = ""):
     db.session.add(saved_story)
     db.session.commit()
 
+def get_saved_stories_by_user(user_id):
+
+    return db.session.query(Story).filter(SavedStory.user_id == user_id).join(SavedStory).all()
+
+    # return SavedStory.query.filter(SavedStory.user_id, SavedStory.story_id, Story.source, Story.title, Story.author, Story.description, Story.story_link, Story.image, Story.content, Story.published).join(Story).all()
+
 
 if __name__ == '__main__':
     from server import app
