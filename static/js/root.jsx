@@ -7,17 +7,7 @@ const Redirect = ReactRouterDOM.Redirect;
 
 function Homepage() {
     return (
-        <div> 
-            <SearchBar />
-        </div>
-    )
-}
-
-
-
-function Articles(props) {
-    return (
-        <div> 
+        <div>
             <SearchBar />
         </div>
     )
@@ -32,6 +22,34 @@ function SearchBar() {
         </div>
     )
 }
+
+function NewsListItem(props) {
+    return <li>{props.title}</li>
+}
+
+
+function NewsList(props) {
+    React.useEffect(() => {
+        fetch('/api/top-news')
+        .then(response => response.json())
+        .then(data => console.lot(data))
+            const topNewsList = []
+            for(const post of data) {
+                PerformanceObserverEntryList.push(<NewsListItem title={post.title}/>)
+            }
+    })
+
+    return (
+        <div>
+            <SearchBar />
+            <ul>
+                {topNewsList}
+            </ul>
+        </div>
+    )
+}
+
+
 
 function Login(props) {
     return (
@@ -60,6 +78,9 @@ function App() {
                             <Link to="/"> Home </Link>
                         </li>
                         <li>
+                            <Link to="/top-news"> Top News </Link>
+                        </li>
+                        <li>
                             <Link to="/login"> Log In </Link>
                         </li>
                         <li>
@@ -73,6 +94,9 @@ function App() {
                     </Route>
                     <Route path="/login">
                         <Login />
+                    </Route>
+                    <Route path="/top-news">
+                        <NewsList />
                     </Route>
                     <Route path="/">
                         <Homepage />

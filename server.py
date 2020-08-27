@@ -26,9 +26,27 @@ app.jinja_env.undefined = StrictUndefined
 def root():
     return render_template("root.html")
 
-@app.route("/v2/api/top-posts")
+@app.route("/v2/api/top-news")
 def get_news_articles():
-    pass
+    url = ('http://newsapi.org/v2/everything?'
+       'q=mindfulness&'
+       'from=' + TODAY +'&'
+       'sortBy=publishedAt&'
+       'apiKey=' + API_SECRET_KEY)
+
+    response = requests.get(url)
+
+    response_json = response.json()
+
+    articles = response_json['articles']
+
+    print(articles)
+
+    # articles = save_article_to_db(articles)
+
+    return jsonify(articles)
+
+
 
 
 @app.route("/")
@@ -45,12 +63,10 @@ def fetch_home():
 def fetch_stories():
     """Return news stories as JSON"""
 
-    #decide whether to use q (keyword in any part of the article) or qInTitle (keyword search in title)
-
     url = ('http://newsapi.org/v2/everything?'
-       'qInTitle=mindfulness&'
+       'q=mindfulness&'
        'from=' + TODAY +'&'
-       'sortBy=popularity&'
+       'sortBy=publishedAt&'
        'apiKey=' + API_SECRET_KEY)
 
     response = requests.get(url)
@@ -67,12 +83,13 @@ def fetch_stories():
 @app.route("/search", methods=["GET", "POST"])
 def topic_search():
     """Search for articles that include a specific keyword"""
+
     topic_keyword = request.args["topic_keyword"]
 
     url = ('http://newsapi.org/v2/everything?'
         'q=' + topic_keyword + '&' +
         'from=' + TODAY +'&'
-        'sortBy=popularity&'
+        'sortBy=publishedAt&'
         'apiKey=' + API_SECRET_KEY)
 
     response = requests.get(url)
