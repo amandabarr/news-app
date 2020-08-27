@@ -29,15 +29,22 @@ function NewsListItem(props) {
 
 
 function NewsList(props) {
+    const [topNewsList, setTopNewsList] = React.useState([])
+
     React.useEffect(() => {
         fetch('/api/top-news')
         .then(response => response.json())
-        .then(data => console.lot(data))
-            const topNewsList = []
-            for(const post of data) {
-                PerformanceObserverEntryList.push(<NewsListItem title={post.title}/>)
+        .then((data) => {
+            const newsList = []
+            for (const post of data) {
+                newsList.push(<NewsListItem title={post.title}/>)
             }
+            setTopNewsList(newsList)
     })
+})
+
+
+
 
     return (
         <div>
