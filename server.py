@@ -40,6 +40,8 @@ def get_news_articles():
 
     articles = response_json['articles']
 
+    articles = save_article_to_db(articles)
+
     return jsonify(articles)
 
 
@@ -98,24 +100,24 @@ def get_news_articles():
 
 #     return jsonify(articles)
 
-# def save_article_to_db(articles):
-#     for article in articles:
-#         source = article["source"]["name"]
-#         title= article["title"]
-#         author = article["author"]
-#         description = article["description"]
-#         story_link = article["url"]
-#         image = article["urlToImage"]
-#         content = article["content"]
-#         published = article["publishedAt"]
+def save_article_to_db(articles):
+    for article in articles:
+        source = article["source"]["name"]
+        title= article["title"]
+        author = article["author"]
+        description = article["description"]
+        story_link = article["url"]
+        image = article["urlToImage"]
+        content = article["content"]
+        published = article["publishedAt"]
 
-#         story = crud.get_story(source, title, author, description)
-#         if not story:
-#             story = crud.create_story(source, title, author, description, story_link, image, content, published)
+        story = crud.get_story(source, title, author, description)
+        if not story:
+            story = crud.create_story(source, title, author, description, story_link, image, content, published)
 
-#         article["storyId"] = story.story_id
+        article["storyId"] = story.story_id
 
-#     return articles
+    return articles
 
 # @app.route("/save_article", methods = ["GET", "POST"])
 # def save_article_to_favorites():
@@ -132,27 +134,33 @@ def get_news_articles():
 #     # server is getting response, form.get vs params,
 
 
-# @app.route("/login", methods = ["GET", "POST"])
-# def user_login():
+@app.route("/login", methods = ["GET", "POST"])
+def user_login():
+    """Allow user to log in or option to create new account"""
+
+    username = request.form.get("username")
+
+    password = request.form.get("password")
+
+    user = crud.get_user(username, password)
+
+
+    if user:
+        session["user"] = username
+        session["password"] = password
+        session["user_id"] = user.user_id
+        print(session)
+        print(session['user_id'])
+        return redirect("/")
+    else:
+        flash("Please enter a valid username and password")
+        return render_template("login.html")
+
+# @app.route("/api/user", methods = ["GET"])
+# def user_api():
 #     """Allow user to log in or option to create new account"""
-
-#     username = request.form.get("username")
-
-#     password = request.form.get("password")
-
-#     user = crud.get_user(username, password)
-
-
-#     if user:
-#         session["user"] = username
-#         session["password"] = password
-#         session["user_id"] = user.user_id
-#         print(session)
-#         print(session['user_id'])
-#         return redirect("/")
-#     else:
-#         flash("Please enter a valid username and password")
-#         return render_template("login.html")
+#     # { name: 'Amanda', topics: ['Cats', 'Dogs', 'Business'] }
+#     return session
 
 # @app.route("/logout")
 # def user_logout():
