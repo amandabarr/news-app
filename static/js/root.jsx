@@ -6,19 +6,87 @@ const Switch = ReactRouterDOM.Switch;
 const Redirect = ReactRouterDOM.Redirect;
 
 function Homepage() {
+  const [articles, setArticles] = React.useState([]);
+  const onArticlesUpdated = (articles) => {
+    setArticles(articles);
+  };
+
+  React.useEffect(() => {
+    fetch("/api/top-news")
+      .then((response) => response.json())
+      .then((articles) => {
+        console.log(articles);
+        onArticlesUpdated(articles);
+      });
+  }, []);
+
   return (
     <div>
-      <SearchBar />
+      <SearchBar onArticlesUpdated={onArticlesUpdated} />
+      <NewsList articles={articles} />
     </div>
   );
 }
 
-function SearchBar() {
+function SearchBar(props) {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const searchArgs = { topic_keyword: searchQuery };
+    console.log(searchArgs);
+    fetch(`/search?topic_keyword=${searchQuery}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        props.onArticlesUpdated(data);
+      });
+  };
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const handleChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
   return (
     <div>
-      Search:
-      <input type="text"></input>
-      <button> Search </button>
+      <form id="search_form" onSubmit={handleSubmit}>
+        <input
+          value={searchQuery}
+          id="topic_keyword"
+          type="text"
+          placeholder="search topics"
+          onChange={handleChange}
+        />
+        <button type="submit">Search</button>
+      </form>
+    </div>
+  );
+}
+
+// f
+
+//     fetch("/search", search_args, (response) => {
+//       $("#news").html(buildArticles(response));
+//     });
+//   });
+// }
+
+function NewsList(props) {
+  console.log(props.articles);
+  const newsList = [];
+  for (const article of props.articles) {
+    newsList.push(
+      <NewsListItem
+        key={article["storyId"]}
+        title={article["title"]}
+        source={article["source"]["name"]}
+        story_link={article["url"]}
+        image={article["urlToImage"]}
+        published={article["publishedAt"]}
+      />
+    );
+  }
+
+  return (
+    <div>
+      <ul>{newsList}</ul>
     </div>
   );
 }
@@ -35,39 +103,6 @@ function NewsListItem(props) {
       <img src={props.image} />
       <br />
       <button id="favorite"> Save to Favorites </button>
-    </div>
-  );
-}
-
-function NewsList(props) {
-  const [topNewsList, setTopNewsList] = React.useState(["Loading..."]);
-
-  React.useEffect(() => {
-    fetch("/api/top-news")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        const newsList = [];
-        for (const article of data) {
-          newsList.push(
-            <NewsListItem
-              title={article["title"]}
-              source={article["source"]["name"]}
-              story_link={article["url"]}
-              image={article["urlToImage"]}
-              published={article["publishedAt"]}
-            />
-          );
-        }
-        console.log(newsList);
-        setTopNewsList(newsList);
-      });
-  }, []);
-
-  return (
-    <div>
-      <SearchBar />
-      <ul>{topNewsList}</ul>
     </div>
   );
 }
@@ -93,11 +128,11 @@ function App() {
 
   const [user, setUser] = React.useState(null);
 
-  React.useEffect(() => {
-    fetch("/api/user")
-      .then((response) => response.json())
-      .then((user) => setUser(user));
-  }, []);
+  //   React.useEffect(() => {
+  //     fetch("/api/user")
+  //       .then((response) => response.json())
+  //       .then((user) => setUser(user));
+  //   }, []);
 
   return (
     <Router>
