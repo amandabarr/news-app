@@ -44,6 +44,27 @@ def get_news_articles():
 
     return jsonify(articles)
 
+@app.route("/login", methods = ["GET", "POST"])
+def user_login():
+    """Allow user to log in or option to create new account"""
+
+    username = request.form.get("username")
+
+    password = request.form.get("password")
+
+    user = crud.get_user(username, password)
+
+
+    if user:
+        session = {
+            "user": username,
+            "password": password,
+            "user_id": user.user_id
+        }
+        return jsonify(session)
+    else:
+        flash("Please enter a valid username and password")
+
 
 
 
@@ -135,27 +156,27 @@ def save_article_to_favorites():
     # server is getting response, form.get vs params,
 
 
-@app.route("/login", methods = ["GET", "POST"])
-def user_login():
-    """Allow user to log in or option to create new account"""
+# @app.route("/login", methods = ["GET", "POST"])
+# def user_login():
+#     """Allow user to log in or option to create new account"""
 
-    username = request.form.get("username")
+#     username = request.form.get("username")
 
-    password = request.form.get("password")
+#     password = request.form.get("password")
 
-    user = crud.get_user(username, password)
+#     user = crud.get_user(username, password)
 
 
-    if user:
-        session["user"] = username
-        session["password"] = password
-        session["user_id"] = user.user_id
-        print(session)
-        print(session['user_id'])
-        return redirect("/")
-    else:
-        flash("Please enter a valid username and password")
-        return render_template("login.html")
+#     if user:
+#         session["user"] = username
+#         session["password"] = password
+#         session["user_id"] = user.user_id
+#         print(session)
+#         print(session['user_id'])
+#         return redirect("/")
+#     else:
+#         flash("Please enter a valid username and password")
+#         return render_template("login.html")
 
 # @app.route("/api/user", methods = ["GET"])
 # def user_api():
@@ -184,10 +205,10 @@ def user_login():
 #         flash('Account created! Please log in.')
 #     pass
 
-@app.route("/profile")
-def show_user_profile():
+# @app.route("/profile")
+# def show_user_profile():
 
-    return render_template("profile.html")
+#     return render_template("profile.html")
 
 
 @app.route("/profile_stories")

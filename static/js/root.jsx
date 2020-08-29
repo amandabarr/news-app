@@ -32,7 +32,6 @@ function SearchBar(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const searchArgs = { topic_keyword: searchQuery };
-    console.log(searchArgs);
     fetch(`/search?topic_keyword=${searchQuery}`)
       .then((response) => response.json())
       .then((data) => {
@@ -59,14 +58,6 @@ function SearchBar(props) {
     </div>
   );
 }
-
-// f
-
-//     fetch("/search", search_args, (response) => {
-//       $("#news").html(buildArticles(response));
-//     });
-//   });
-// }
 
 function NewsList(props) {
   console.log(props.articles);
@@ -108,13 +99,35 @@ function NewsListItem(props) {
 }
 
 function Login(props) {
+  const [username, setUserName] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // const userArgs = { username: username, password: password };
+    console.log(username, password);
+  };
+  const handleChange = (event) => {
+    alert("sending user info to server!");
+  };
   return (
     <div>
-      Username:
-      <input type="text"></input>
-      Password:
-      <input type="password"></input>
-      <button> Login </button>
+      <form id="login_form" onSubmit={handleSubmit}>
+        Username:
+        <input
+          value={username}
+          id="username"
+          type="text"
+          onChange={handleChange}
+        ></input>
+        Password:
+        <input
+          value={password}
+          id="password"
+          type="text"
+          onChange={handleChange}
+        ></input>
+        <button type="submit"> Login </button>
+      </form>
     </div>
   );
 }
@@ -126,7 +139,7 @@ function Profile() {
 function App() {
   // hello session['user]
 
-  const [user, setUser] = React.useState(null);
+  //   const [user, setUser] = React.useState(null);
 
   //   React.useEffect(() => {
   //     fetch("/api/user")
