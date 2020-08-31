@@ -60,7 +60,6 @@ function SearchBar(props) {
 }
 
 function NewsList(props) {
-  console.log(props.articles);
   const newsList = [];
   for (const article of props.articles) {
     newsList.push(
@@ -101,14 +100,31 @@ function NewsListItem(props) {
 function Login(props) {
   const [username, setUserName] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [userId, setUserId] = React.useState("");
+
+  const handleUsernameChange = (event) => {
+    event.preventDefault();
+    console.log(event);
+    setUserName(event.target.value);
+  };
+  const handlePasswordChange = (event) => {
+    event.preventDefault();
+    console.log(event);
+    setPassword(event.target.value);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    // const userArgs = { username: username, password: password };
     console.log(username, password);
+    fetch(`/login?username=${username}&password=${password}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setUserName(data["username"]);
+        setPassword(data["password"]);
+        setUserId(data["user_id"]);
+      });
   };
-  const handleChange = (event) => {
-    alert("sending user info to server!");
-  };
+
   return (
     <div>
       <form id="login_form" onSubmit={handleSubmit}>
@@ -117,14 +133,14 @@ function Login(props) {
           value={username}
           id="username"
           type="text"
-          onChange={handleChange}
+          onChange={handleUsernameChange}
         ></input>
         Password:
         <input
           value={password}
           id="password"
           type="text"
-          onChange={handleChange}
+          onChange={handlePasswordChange}
         ></input>
         <button type="submit"> Login </button>
       </form>
@@ -157,9 +173,6 @@ function App() {
               <Link to="/"> Home </Link>
             </li>
             <li>
-              <Link to="/top-news"> Top News </Link>
-            </li>
-            <li>
               <Link to="/login"> Log In </Link>
             </li>
             <li>
@@ -174,9 +187,6 @@ function App() {
           </Route>
           <Route path="/login">
             <Login />
-          </Route>
-          <Route path="/top-news">
-            <NewsList />
           </Route>
           <Route path="/">
             <Homepage />

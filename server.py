@@ -48,22 +48,26 @@ def get_news_articles():
 def user_login():
     """Allow user to log in or option to create new account"""
 
-    username = request.form.get("username")
+    username = request.args["username"]
 
-    password = request.form.get("password")
+    password = request.args["password"]
 
     user = crud.get_user(username, password)
 
-
+    print(user)
     if user:
-        session = {
-            "user": username,
-            "password": password,
-            "user_id": user.user_id
-        }
-        return jsonify(session)
+        print("user")
+        session["user"] = username
+        session["password"] = password
+        session["user_id"] = user.user_id
+        return jsonify({
+            'user': username,
+            'password': password,
+            'user_id': user.user_id
+        })
     else:
-        flash("Please enter a valid username and password")
+        print("else line")
+        return "error - this is not working"
 
 
 
