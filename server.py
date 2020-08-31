@@ -40,7 +40,8 @@ def get_news_articles():
 
     articles = response_json['articles']
 
-    articles = save_article_to_db(articles)
+    # articles = save_article_to_db(articles)
+    save_article_to_db(articles)
 
     return jsonify(articles)
 
@@ -69,7 +70,12 @@ def user_login():
         print("else line")
         return "error - this is not working"
 
+def check_user_login_setting():
 
+    if "user_id" in session:
+        return True
+    else:
+        return False
 
 
 # @app.route("/")
@@ -137,8 +143,10 @@ def save_article_to_db(articles):
         published = article["publishedAt"]
 
         story = crud.get_story(source, title, author, description)
+        print(story)
 
         if not story:
+            print(f"creating story {story}")
             story = crud.create_story(source, title, author, description, story_link, image, content, published)
 
         article["storyId"] = story.story_id

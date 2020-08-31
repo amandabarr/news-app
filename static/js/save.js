@@ -11,7 +11,6 @@ function toggleFavorite(favoriteButton, storyId) {
             storyId: storyId
         }
         $.post('/save_article', savedStory, (articleJson) => {
-            console.log("Helloooooo")
           });
     } else {
         favoriteButton.innerText = 'Save to Favorites';

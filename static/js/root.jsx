@@ -148,6 +148,8 @@ function Login(props) {
   );
 }
 
+<Redirect to="/" />;
+
 function Profile() {
   return <div> React Demo Profile </div>;
 }

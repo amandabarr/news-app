@@ -43,7 +43,7 @@ class Story(db.Model):
                         autoincrement=True,
                         primary_key=True)
     source = db.Column(db.String, nullable=False)
-    title = db.Column(db.String, unique=True, nullable=False)
+    title = db.Column(db.String, nullable=False)
     author = db.Column(db.String)
     description = db.Column(db.Text, nullable=False)
     story_link = db.Column(db.String, unique=True, nullable=False)
