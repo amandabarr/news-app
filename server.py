@@ -31,7 +31,9 @@ def get_news_articles():
     url = ('http://newsapi.org/v2/everything?'
        'q=mindfulness&'
        'from=' + TODAY +'&'
+       'language=en&'
        'sortBy=publishedAt&'
+       'sortBy=relevancy&'
        'apiKey=' + API_SECRET_KEY)
 
     response = requests.get(url)
@@ -95,7 +97,9 @@ def fetch_stories():
     url = ('http://newsapi.org/v2/everything?'
        'q=mindfulness&'
        'from=' + TODAY +'&'
+       'language=en&'
        'sortBy=publishedAt&'
+       'sortBy=relevancy&'
        'apiKey=' + API_SECRET_KEY)
 
     response = requests.get(url)
@@ -202,20 +206,20 @@ def save_article_to_favorites():
 #     return redirect(url_for("login"))
 
 
-# def create_account():
-#     """Allow a new user to create an account"""
+def create_account():
+    """Allow a new user to create an account"""
 
-#     username = request.form.get('username')
-#     password = request.form.get('password')
+    username = request.form.get('username')
+    password = request.form.get('password')
 
-#     user = crud.get_user(username, password)
+    user = crud.get_user(username, password)
 
-#     if user:
-#         flash('This username already exists! Try again.')
-#     else:
-#         crud.create_user(email, password)
-#         flash('Account created! Please log in.')
-#     pass
+    if user:
+        flash('This username already exists! Try again.')
+    else:
+        crud.create_user(email, password)
+        flash('Account created! Please log in.')
+    pass
 
 # @app.route("/profile")
 # def show_user_profile():

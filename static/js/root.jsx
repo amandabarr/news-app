@@ -101,6 +101,7 @@ function Login(props) {
   const [username, setUserName] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [userId, setUserId] = React.useState("");
+  // const [isAuthenticated, userHasAuthenticated] = React.useState(false);
 
   const handleUsernameChange = (event) => {
     event.preventDefault();
@@ -119,10 +120,17 @@ function Login(props) {
     fetch(`/login?username=${username}&password=${password}`)
       .then((response) => response.json())
       .then((data) => {
+        credentials: "include";
+        credentials: "same-origin";
         setUserName(data["username"]);
         setPassword(data["password"]);
         setUserId(data["user_id"]);
+        console.log(userId);
+        // userHasAuthenticated(true);
+        // console.log(isAuthenticated);
       });
+
+    <Redirect to="/" />;
   };
 
   return (
@@ -148,10 +156,8 @@ function Login(props) {
   );
 }
 
-<Redirect to="/" />;
-
 function Profile() {
-  return <div> React Demo Profile </div>;
+  return <div> Favorite Stories </div>;
 }
 
 function App() {
