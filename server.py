@@ -60,13 +60,15 @@ def user_login():
     print(user)
     if user:
         print("user")
-        session["user"] = username
-        session["password"] = password
         session["user_id"] = user.user_id
+        # session["user"] = username
+        # session["password"] = password
+        # session["user_id"] = user.user_id
         return jsonify({
             'user': username,
             'password': password,
-            'user_id': user.user_id
+            'user_id': user.user_id,
+            'logged_in': True
         })
     else:
         print("else line")
@@ -157,15 +159,25 @@ def save_article_to_db(articles):
 
     return articles
 
-@app.route("/save_article", methods = ["GET", "POST"])
+@app.route("/api/save_article", methods = ["GET", "POST"])
 def save_article_to_favorites():
     # crud function to save article under specific user.  Need to get primary keys user_id and story_id and option to comment/tag
-    story_id = request.form.get("storyId")
+    story_id = request.args("storyId")
     # session["user_id"]
 
     crud.save_story(session["user_id"], story_id)
 
     return jsonify({"success": True})
+
+# @app.route("/save_article", methods = ["GET", "POST"])
+# def save_article_to_favorites():
+#     # crud function to save article under specific user.  Need to get primary keys user_id and story_id and option to comment/tag
+#     story_id = request.form.get("storyId")
+#     # session["user_id"]
+
+#     crud.save_story(session["user_id"], story_id)
+
+#     return jsonify({"success": True})
 
     # return jsonify({"response": "ok"})
     # on front end, event listener or re-use existing, test that event listener is working by printing, make network request, check that

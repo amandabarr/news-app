@@ -70,6 +70,8 @@ function NewsList(props) {
         story_link={article["url"]}
         image={article["urlToImage"]}
         published={article["publishedAt"]}
+        content={article["content"]}
+        storyId={article["storyId"]}
       />
     );
   }
@@ -82,26 +84,53 @@ function NewsList(props) {
 }
 
 function NewsListItem(props) {
+  const { loginData } = React.useContext(AuthContext);
+  let articleImage;
+  if (props.image != "null") {
+    articleImage = <img src={props.image} />;
+  } else {
+    articleImage = <div>No image</div>;
+  }
+
+  const handleFavorite = (event) => {
+    event.preventDefault();
+    alert(`handling fav: ${Object.keys(loginData)}`);
+    if (loginData["isLoggedIn"] == true) {
+      alert(`for UserId ${loginData["userId"]} Save Me to Favorites`);
+      fetch(
+        `/save_article?userId=${loginData["user_id"]}&storyId=${props.storyId}`,
+        console.log(loginData),
+        console.log(props.storyId)
+      );
+    }
+  };
+
   return (
     <div>
+      {console.log(props.storyId)}
       <a href={props.story_link}>{props.title}</a>
       <br />
       {props.source}
       <br />
       {props.published}
       <br />
-      <img src={props.image} />
+      {articleImage}
       <br />
-      <button id="favorite"> Save to Favorites </button>
+      {props.content}
+      <br />
+      <button id="favorite" onClick={handleFavorite}>
+        Save to Favorites
+      </button>
     </div>
   );
 }
 
-function Login(props) {
+function Login() {
   const [username, setUserName] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [userId, setUserId] = React.useState("");
-  // const [isAuthenticated, userHasAuthenticated] = React.useState(false);
+  const { loginData, setLoginData } = React.useContext(AuthContext);
+  console.log("login AuthContext", loginData);
 
   const handleUsernameChange = (event) => {
     event.preventDefault();
@@ -120,21 +149,22 @@ function Login(props) {
     fetch(`/login?username=${username}&password=${password}`)
       .then((response) => response.json())
       .then((data) => {
-        credentials: "include";
-        credentials: "same-origin";
         setUserName(data["username"]);
         setPassword(data["password"]);
         setUserId(data["user_id"]);
         console.log(userId);
-        // userHasAuthenticated(true);
-        // console.log(isAuthenticated);
+        setLoginData({
+          isLoggedIn: data["logged_in"],
+          userId: data["user_id"],
+        });
       });
-
-    <Redirect to="/" />;
   };
+  if (loginData["isLoggedIn"] == true) {
+    return <Redirect to="/" />;
+  }
 
   return (
-    <div>
+    <div name="login">
       <form id="login_form" onSubmit={handleSubmit}>
         Username:
         <input
@@ -160,7 +190,12 @@ function Profile() {
   return <div> Favorite Stories </div>;
 }
 
+const AuthContext = React.createContext({});
+console.log(AuthContext);
+
 function App() {
+  const [loginData, setLoginData] = React.useState({});
+
   // hello session['user]
 
   //   const [user, setUser] = React.useState(null);
@@ -172,36 +207,38 @@ function App() {
   //   }, []);
 
   return (
-    <Router>
-      {/* <h1>Hello {user.name}</h1>  */}
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/"> Home </Link>
-            </li>
-            <li>
-              <Link to="/login"> Log In </Link>
-            </li>
-            <li>
-              <Link to="/profile"> Profile </Link>
-            </li>
-            {/* {user.topics.map(topic => )} */}
-          </ul>
-        </nav>
-        <Switch>
-          <Route path="/profile">
-            <Profile />
-          </Route>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/">
-            <Homepage />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
+    <AuthContext.Provider value={{ loginData, setLoginData }}>
+      <Router>
+        {/* <h1>Hello {user.name}</h1>  */}
+        <div>
+          <nav>
+            <ul>
+              <li>
+                <Link to="/"> Home </Link>
+              </li>
+              <li>
+                <Link to="/login"> Log In </Link>
+              </li>
+              <li>
+                <Link to="/profile"> Profile </Link>
+              </li>
+              {/* {user.topics.map(topic => )} */}
+            </ul>
+          </nav>
+          <Switch>
+            <Route path="/profile">
+              <Profile />
+            </Route>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/">
+              <Homepage />
+            </Route>
+          </Switch>
+        </div>
+      </Router>
+    </AuthContext.Provider>
   );
 }
 
