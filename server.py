@@ -159,15 +159,49 @@ def save_article_to_db(articles):
 
     return articles
 
-@app.route("/api/save_article", methods = ["GET", "POST"])
+@app.route("/save_article", methods = ["GET", "POST"])
 def save_article_to_favorites():
     # crud function to save article under specific user.  Need to get primary keys user_id and story_id and option to comment/tag
-    story_id = request.args("storyId")
+    story_id = request.args["storyId"]
+    print(story_id)
     # session["user_id"]
 
     crud.save_story(session["user_id"], story_id)
 
     return jsonify({"success": True})
+
+@app.route("/profile_stories")
+def user_profile_data():
+    """View user's profile and saved articles"""
+
+    user_id = session["user_id"]
+
+    profile_stories = crud.get_saved_stories_by_user(user_id)
+    print(profile_stories)
+
+    story_list = [story_db_to_json(story, True) for story in profile_stories]
+
+    return jsonify(story_list)
+
+def story_db_to_json(story, favorite):
+
+    return {
+            "author": story.author,
+            "content": story.content,
+            "description": story.description,
+            "favorite": favorite,
+            "publishedAt": story.published,
+            "source": {
+                "id": None,
+                "name": story.source
+            },
+            "storyId": story.story_id,
+            "title": story.title,
+            "url": story.story_link,
+            "urlToImage": story.image
+            }
+
+    return jsonify({})
 
 # @app.route("/save_article", methods = ["GET", "POST"])
 # def save_article_to_favorites():
@@ -239,38 +273,38 @@ def create_account():
 #     return render_template("profile.html")
 
 
-@app.route("/profile_stories")
-def user_profile_data():
-    """View user's profile and saved articles"""
+# @app.route("/profile_stories")
+# def user_profile_data():
+#     """View user's profile and saved articles"""
 
-    user_id = session["user_id"]
+#     user_id = session["user_id"]
 
-    profile_stories = crud.get_saved_stories_by_user(user_id)
-    print(profile_stories)
+#     profile_stories = crud.get_saved_stories_by_user(user_id)
+#     print(profile_stories)
 
-    story_list = [story_db_to_json(story, True) for story in profile_stories]
+#     story_list = [story_db_to_json(story, True) for story in profile_stories]
 
-    return jsonify(story_list)
+#     return jsonify(story_list)
 
-def story_db_to_json(story, favorite):
+# def story_db_to_json(story, favorite):
 
-    return {
-            "author": story.author,
-            "content": story.content,
-            "description": story.description,
-            "favorite": favorite,
-            "publishedAt": story.published,
-            "source": {
-                "id": None,
-                "name": story.source
-            },
-            "storyId": story.story_id,
-            "title": story.title,
-            "url": story.story_link,
-            "urlToImage": story.image
-            }
+#     return {
+#             "author": story.author,
+#             "content": story.content,
+#             "description": story.description,
+#             "favorite": favorite,
+#             "publishedAt": story.published,
+#             "source": {
+#                 "id": None,
+#                 "name": story.source
+#             },
+#             "storyId": story.story_id,
+#             "title": story.title,
+#             "url": story.story_link,
+#             "urlToImage": story.image
+#             }
 
-    return jsonify({})
+#     return jsonify({})
 
 
 

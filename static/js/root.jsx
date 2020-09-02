@@ -98,7 +98,7 @@ function NewsListItem(props) {
     if (loginData["isLoggedIn"] == true) {
       alert(`for UserId ${loginData["userId"]} Save Me to Favorites`);
       fetch(
-        `/save_article?userId=${loginData["user_id"]}&storyId=${props.storyId}`,
+        `/save_article?storyId=${props.storyId}`,
         console.log(loginData),
         console.log(props.storyId)
       );
@@ -186,8 +186,29 @@ function Login() {
   );
 }
 
-function Profile() {
-  return <div> Favorite Stories </div>;
+function Profile(props) {
+  const { loginData } = React.useContext(AuthContext);
+  console.log(Object.keys(loginData));
+  const [articles, setArticles] = React.useState([]);
+  const onArticlesUpdated = (articles) => {
+    setArticles(articles);
+  };
+
+  React.useEffect(() => {
+    fetch(`/profile_stories?userId=${loginData["userId"]}`)
+      .then((response) => response.json())
+      .then((articles) => {
+        console.log(articles);
+        onArticlesUpdated(articles);
+      });
+  }, []);
+
+  return (
+    <div>
+      <SearchBar onArticlesUpdated={onArticlesUpdated} />
+      <NewsList articles={articles} />
+    </div>
+  );
 }
 
 const AuthContext = React.createContext({});
