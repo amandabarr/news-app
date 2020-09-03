@@ -106,20 +106,33 @@ function NewsListItem(props) {
     articleImage = <div>No image</div>;
   }
 
+  const [isFavorite, setIsFavorite] = React.useState(props.favorite);
   const handleFavorite = (event) => {
     event.preventDefault();
-    alert(`handling fav: ${Object.keys(loginData)}`);
-    if (loginData["isLoggedIn"] == true) {
-      alert(`for UserId ${loginData["userId"]} Save Me to Favorites`);
-      fetch(
-        `/save_article?storyId=${props.storyId}`,
-        console.log(loginData),
-        console.log(props.storyId)
-      );
+    if (loginData["isLoggedIn"]) {
+      if (isFavorite) {
+        fetch(`/remove?storyId=${props.storyId}`)
+          .then((response) => response.json())
+          .then((json) => {
+            if (json["success"]) {
+              setIsFavorite(false);
+            }
+          });
+      } else {
+        fetch(`/save_article?storyId=${props.storyId}`)
+          .then((response) => response.json())
+          .then((json) => {
+            if (json["success"]) {
+              setIsFavorite(true);
+            }
+          });
+      }
+    } else {
+      alert("You need to be signed in to favorite an article");
     }
   };
 
-  let favoriteButtonLabel = props.favorite
+  let favoriteButtonLabel = isFavorite
     ? "Remove from Favorites"
     : "Save to Favorites";
   return (
@@ -237,9 +250,17 @@ function Profile(props) {
 }
 
 // Context hook, so the user's log in status can be passed to multiple components
+// const mindfulInterval = setIterval(mindfulTimer, 50000);
+// function mindfulTimer() {
+//   alert("Take a deep breath!");
+// }
 
 const AuthContext = React.createContext({});
 console.log(AuthContext);
+
+// nav bar component  set state [{home: /}, {login: /login}, profile{route: /profile, title: profile}]
+//map over state (built-in method for arrays),
+// get user's fav topics, add topics to nav bar(append new), update the state
 
 function App() {
   const [loginData, setLoginData] = React.useState({});

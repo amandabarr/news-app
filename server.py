@@ -215,6 +215,20 @@ def story_db_to_json(story, favorite):
 
     return jsonify({})
 
+@app.route("/remove")
+def remove_from_favorites():
+
+    story_id = request.args["storyId"]
+
+    user = session["user_id"]
+
+    crud.remove_from_favorites(user, story_id)
+
+    jsonify({"success": True})
+    return jsonify({"success": True})
+
+
+
 
 
 # @app.route("/api/user", methods = ["GET"])

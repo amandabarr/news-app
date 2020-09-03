@@ -64,6 +64,13 @@ def get_saved_story_by_story_id(story_id):
     print(f"Saved Story {saved_story}")
     return saved_story
 
+def remove_from_favorites(user_id, story_id):
+
+    saved_story = db.session.query(SavedStory).filter(SavedStory.user_id == user_id, SavedStory.story_id == story_id).first()
+
+    db.session.delete(saved_story)
+    db.session.commit()
+
 
 
 if __name__ == '__main__':
