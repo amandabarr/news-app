@@ -249,12 +249,11 @@ function Profile(props) {
   );
 }
 
-// Context hook, so the user's log in status can be passed to multiple components
-// const mindfulInterval = setIterval(mindfulTimer, 50000);
-// function mindfulTimer() {
-//   alert("Take a deep breath!");
-// }
+setInterval(function () {
+  alert("Take a deep breath");
+}, 10000);
 
+// Context hook, so the user's log in status can be passed to multiple components
 const AuthContext = React.createContext({});
 console.log(AuthContext);
 
