@@ -1,9 +1,12 @@
+const { Button, Modal, Tabs } = ReactBootstrap;
 const Router = ReactRouterDOM.BrowserRouter;
 const Route = ReactRouterDOM.Route;
 const Link = ReactRouterDOM.Link;
 const Prompt = ReactRouterDOM.Prompt;
 const Switch = ReactRouterDOM.Switch;
 const Redirect = ReactRouterDOM.Redirect;
+
+// render the homepage of the app, displaying mindfulness articles, a nav bar, and a search bar
 
 function Homepage() {
   const [articles, setArticles] = React.useState([]);
@@ -28,6 +31,8 @@ function Homepage() {
   );
 }
 
+// allow a user to search for a specific topic
+
 function SearchBar(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -39,10 +44,14 @@ function SearchBar(props) {
         props.onArticlesUpdated(data);
       });
   };
+
+  // set state for search bar, begins as an empty string
+
   const [searchQuery, setSearchQuery] = React.useState("");
   const handleChange = (event) => {
     setSearchQuery(event.target.value);
   };
+
   return (
     <div>
       <form id="search_form" onSubmit={handleSubmit}>
@@ -50,7 +59,7 @@ function SearchBar(props) {
           value={searchQuery}
           id="topic_keyword"
           type="text"
-          placeholder="search topics"
+          placeholder="search topic"
           onChange={handleChange}
         />
         <button type="submit">Search</button>
@@ -58,6 +67,8 @@ function SearchBar(props) {
     </div>
   );
 }
+
+//
 
 function NewsList(props) {
   const newsList = [];
@@ -72,6 +83,7 @@ function NewsList(props) {
         published={article["publishedAt"]}
         content={article["content"]}
         storyId={article["storyId"]}
+        favorite={article["favorite"]}
       />
     );
   }
@@ -82,6 +94,8 @@ function NewsList(props) {
     </div>
   );
 }
+
+//
 
 function NewsListItem(props) {
   const { loginData } = React.useContext(AuthContext);
@@ -105,6 +119,9 @@ function NewsListItem(props) {
     }
   };
 
+  let favoriteButtonLabel = props.favorite
+    ? "Remove from Favorites"
+    : "Save to Favorites";
   return (
     <div>
       {console.log(props.storyId)}
@@ -119,11 +136,13 @@ function NewsListItem(props) {
       {props.content}
       <br />
       <button id="favorite" onClick={handleFavorite}>
-        Save to Favorites
+        {favoriteButtonLabel}
       </button>
     </div>
   );
 }
+
+// user can log in to their account to see their saved articles
 
 function Login() {
   const [username, setUserName] = React.useState("");
@@ -162,6 +181,10 @@ function Login() {
   if (loginData["isLoggedIn"] == true) {
     return <Redirect to="/" />;
   }
+  let loginButton;
+  if (loginData["isLoggedIn"] == true) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <div name="login">
@@ -186,6 +209,8 @@ function Login() {
   );
 }
 
+// display the user's profile page
+
 function Profile(props) {
   const { loginData } = React.useContext(AuthContext);
   console.log(Object.keys(loginData));
@@ -195,7 +220,7 @@ function Profile(props) {
   };
 
   React.useEffect(() => {
-    fetch(`/profile_stories?userId=${loginData["userId"]}`)
+    fetch(`/profile_stories?userId${loginData["userId"]}`)
       .then((response) => response.json())
       .then((articles) => {
         console.log(articles);
@@ -211,26 +236,17 @@ function Profile(props) {
   );
 }
 
+// Context hook, so the user's log in status can be passed to multiple components
+
 const AuthContext = React.createContext({});
 console.log(AuthContext);
 
 function App() {
   const [loginData, setLoginData] = React.useState({});
 
-  // hello session['user]
-
-  //   const [user, setUser] = React.useState(null);
-
-  //   React.useEffect(() => {
-  //     fetch("/api/user")
-  //       .then((response) => response.json())
-  //       .then((user) => setUser(user));
-  //   }, []);
-
   return (
     <AuthContext.Provider value={{ loginData, setLoginData }}>
       <Router>
-        {/* <h1>Hello {user.name}</h1>  */}
         <div>
           <nav>
             <ul>

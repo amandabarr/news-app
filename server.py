@@ -43,7 +43,9 @@ def get_news_articles():
     articles = response_json['articles']
 
     # articles = save_article_to_db(articles)
-    save_article_to_db(articles)
+
+    user = session["user_id"]
+    save_article_to_db(articles, user)
 
     return jsonify(articles)
 
@@ -99,7 +101,11 @@ def fetch_stories():
 
     articles = response_json['articles']
 
-    articles = save_article_to_db(articles)
+    user = session["user_id"]
+
+    articles = save_article_to_db(articles, user)
+
+
 
     return jsonify(articles)
 
@@ -122,11 +128,14 @@ def topic_search():
 
     articles = response_json['articles']
 
-    articles = save_article_to_db(articles)
+    user = session["user_id"]
+
+    articles = save_article_to_db(articles, user)
+
 
     return jsonify(articles)
 
-def save_article_to_db(articles):
+def save_article_to_db(articles, userId):
     for article in articles:
         source = article["source"]["name"]
         title= article["title"]
@@ -138,6 +147,7 @@ def save_article_to_db(articles):
         published = article["publishedAt"]
 
         story = crud.get_story(source, title, author, description)
+
         print(story)
 
         if not story:
@@ -145,6 +155,19 @@ def save_article_to_db(articles):
             story = crud.create_story(source, title, author, description, story_link, image, content, published)
 
         article["storyId"] = story.story_id
+
+        saved_story = crud.get_saved_stories_by_user_and_story(userId, story.story_id)
+
+        article["favorite"] = saved_story != None
+
+        # user = session["user_id"]
+
+        # saved_story = crud.get_saved_stories_by_user(user)
+
+        # for story in saved_story:
+        #     print(saved_story)
+        #     article["favorite"] = saved_story != None
+
 
     return articles
 

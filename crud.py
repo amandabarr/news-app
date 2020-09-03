@@ -48,7 +48,22 @@ def get_saved_stories_by_user(user_id):
 
     return db.session.query(Story).filter(SavedStory.user_id == user_id).join(SavedStory).all()
 
+
+def get_saved_stories_by_user_and_story(user_id, story_id):
+
+    saved_story = db.session.query(SavedStory).filter(SavedStory.user_id == user_id, SavedStory.story_id == story_id).first()
+    print(f"Saved Story {saved_story}")
+    return saved_story
+
     # return SavedStory.query.filter(SavedStory.user_id, SavedStory.story_id, Story.source, Story.title, Story.author, Story.description, Story.story_link, Story.image, Story.content, Story.published).join(Story).all()
+
+
+def get_saved_story_by_story_id(story_id):
+
+    saved_story = db.session.query(Story).filter(SavedStory.story_id == story_id).join(SavedStory).first()
+    print(f"Saved Story {saved_story}")
+    return saved_story
+
 
 
 if __name__ == '__main__':
