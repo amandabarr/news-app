@@ -63,7 +63,7 @@ def user_login():
     if user:
         print("user")
         session["user_id"] = user.user_id
-        session["favorite_topics"]
+        # session["favorite_topics"]
         # session["user"] = username
         # session["password"] = password
         # session["user_id"] = user.user_id

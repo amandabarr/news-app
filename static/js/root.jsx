@@ -29,28 +29,30 @@ function Homepage() {
   );
 }
 
+// this component may be used to populate the nav bar
+// may call default categories "default" and custom "custom" to make separate api calls?
+// will have to update user favorite topics once selected
+
 function DropDown() {
-  const [isVisible, setIsVisible] = React.useState();
+  // const [isVisible, setIsVisible] = React.useState();
   return (
     <div className="dropdown">
-      <button className="dropbtn">Edit Favorites</button>
-      <div className="dropdown-content">
-        <a href="#">Business</a>
-        <br />
-        <a href="#">Entertainment</a>
-        <br />
-        <a href="#">General</a>
-        <br />
-        <a href="#">Health</a>
-        <br />
-        <a href="#">Science</a>
-        <br />
-        <a href="#">Sports</a>
-        <br />
-        <a href="#">Technology</a>
-        <a href="#">Choose your Own</a>
-        <br />
-      </div>
+      <form>
+        <label>Add Favorite Topic </label>
+        <select id="topics" name="topicCategory">
+          <option value="test123">Business</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="General">General</option>
+          <option value="Health">Health</option>
+          <option value="Science">Science</option>
+          <option value="Sports">Sports</option>
+          <option value="Technology">Technology</option>
+          <option type="text" value="topicCategory">
+            Custom Favorite
+          </option>
+        </select>
+        <input type="submit" />
+      </form>
     </div>
   );
 }
@@ -217,7 +219,7 @@ function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(username, password);
-    fetch(`/login?username=${username}&password=${password}`)
+    fetch(`/api/login?username=${username}&password=${password}`)
       .then((response) => response.json())
       .then((data) => {
         setUserName(data["username"]);
