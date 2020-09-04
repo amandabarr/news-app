@@ -1,4 +1,3 @@
-const { Button, Modal, Tabs } = ReactBootstrap;
 const Router = ReactRouterDOM.BrowserRouter;
 const Route = ReactRouterDOM.Route;
 const Link = ReactRouterDOM.Link;
@@ -7,7 +6,6 @@ const Switch = ReactRouterDOM.Switch;
 const Redirect = ReactRouterDOM.Redirect;
 
 // render the homepage of the app, displaying mindfulness articles, a nav bar, and a search bar
-
 function Homepage() {
   const [articles, setArticles] = React.useState([]);
   const onArticlesUpdated = (articles) => {
@@ -31,21 +29,34 @@ function Homepage() {
   );
 }
 
-// allow a user to search for a specific topic
+function DropDown() {
+  const [isVisible, setIsVisible] = React.useState();
+  return (
+    <div className="dropdown">
+      <button className="dropbtn">Edit Favorites</button>
+      <div className="dropdown-content">
+        <a href="#">Topic 1</a>
+        <br />
+        <a href="#">Topic 2</a>
+        <br />
+        <a href="#">Topic 3</a>
+      </div>
+    </div>
+  );
+}
 
+// allow a user to search for a specific topic keyword
 function SearchBar(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const searchArgs = { topic_keyword: searchQuery };
-    fetch(`/search?topic_keyword=${searchQuery}`)
+    fetch(`/api/search?topic_keyword=${searchQuery}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
         props.onArticlesUpdated(data);
       });
   };
-
-  // set state for search bar, begins as an empty string
 
   const [searchQuery, setSearchQuery] = React.useState("");
   const handleChange = (event) => {
@@ -95,8 +106,6 @@ function NewsList(props) {
   );
 }
 
-//
-
 function NewsListItem(props) {
   const { loginData } = React.useContext(AuthContext);
   let articleImage;
@@ -106,12 +115,33 @@ function NewsListItem(props) {
     articleImage = <div>No image</div>;
   }
 
+  // if (!loginData["isLoggedIn"])
+  //   return alert("You need to be signed in to favorite an article");
+
+  // fetch(`/api/favorites?storyId=${props.storyId}`, { method: isFavorite ? 'DELETE' : 'POST' })
+  //   .then((response) => response.json())
+  //   .then((json) => {
+  //     if (json["success"]) {
+  //       setIsFavorite(json.isFavorite);
+  //     } else {
+  //       alert(json.message)
+  //     }
+  //   });
+
+  // a user can save an article to their favorites, or remove a saved article
+  // if user is not logged in, alert notifies user to login to save an article
   const [isFavorite, setIsFavorite] = React.useState(props.favorite);
   const handleFavorite = (event) => {
     event.preventDefault();
     if (loginData["isLoggedIn"]) {
+      // GET /api/favorites - list a user's favorites
+      // use this for profile
+      // POST /api/favorites - create a favorite
+      // - fetch(`/api/favorites?storyId=${props.storyId}`, { method: 'POST' });
+      // DELETE /api/favorites - deletes a favorite
+      // - fetch(`/api/favorites?storyId=${props.storyId}`, { method: 'DELETE' })
       if (isFavorite) {
-        fetch(`/remove?storyId=${props.storyId}`)
+        fetch(`/api/remove_article?storyId=${props.storyId}`)
           .then((response) => response.json())
           .then((json) => {
             if (json["success"]) {
@@ -119,7 +149,7 @@ function NewsListItem(props) {
             }
           });
       } else {
-        fetch(`/save_article?storyId=${props.storyId}`)
+        fetch(`/api/save_article?storyId=${props.storyId}`)
           .then((response) => response.json())
           .then((json) => {
             if (json["success"]) {
@@ -155,8 +185,7 @@ function NewsListItem(props) {
   );
 }
 
-// user can log in to their account to see their saved articles
-
+// user can log in to their account, save news articles, and see these articles displayed on their profile page
 function Login() {
   const [username, setUserName] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -185,9 +214,11 @@ function Login() {
         setPassword(data["password"]);
         setUserId(data["user_id"]);
         console.log(userId);
+        // setLoginData(data)
         setLoginData({
           isLoggedIn: data["logged_in"],
           userId: data["user_id"],
+          favoriteTopics: data.favoriteTopics,
         });
       });
   };
@@ -222,8 +253,7 @@ function Login() {
   );
 }
 
-// display the user's profile page
-
+// display the user's profile page with the user's saved articles
 function Profile(props) {
   const { loginData } = React.useContext(AuthContext);
   console.log(Object.keys(loginData));
@@ -233,7 +263,7 @@ function Profile(props) {
   };
 
   React.useEffect(() => {
-    fetch(`/profile_stories?userId${loginData["userId"]}`)
+    fetch(`/api/profile_stories?userId${loginData["userId"]}`)
       .then((response) => response.json())
       .then((articles) => {
         console.log(articles);
@@ -249,9 +279,10 @@ function Profile(props) {
   );
 }
 
-setInterval(function () {
-  alert("Take a deep breath");
-}, 10000);
+// mindfulness timer that pops alert after a period of time
+// setInterval(function () {
+//   alert("Take a deep breath");
+// }, 10000);
 
 // Context hook, so the user's log in status can be passed to multiple components
 const AuthContext = React.createContext({});
@@ -262,7 +293,7 @@ console.log(AuthContext);
 // get user's fav topics, add topics to nav bar(append new), update the state
 
 function App() {
-  const [loginData, setLoginData] = React.useState({});
+  const [loginData, setLoginData] = React.useState({ favoriteTopics: [] });
 
   return (
     <AuthContext.Provider value={{ loginData, setLoginData }}>
@@ -274,19 +305,25 @@ function App() {
                 <Link to="/"> Home </Link>
               </li>
               <li>
-                <Link to="/login"> Log In </Link>
+                <Link to="/api/login"> Log In </Link>
               </li>
               <li>
-                <Link to="/profile"> Profile </Link>
+                <Link to="/api/profile"> Profile </Link>
               </li>
-              {/* {user.topics.map(topic => )} */}
+              {loginData.favoriteTopics.map((topic) => {
+                return <li>{topic}</li>;
+                // <Link to="/api/profile"> Profile </Link>;
+              })}
+              <li>
+                <DropDown></DropDown>
+              </li>
             </ul>
           </nav>
           <Switch>
-            <Route path="/profile">
+            <Route path="/api/profile">
               <Profile />
             </Route>
-            <Route path="/login">
+            <Route path="/api/login">
               <Login />
             </Route>
             <Route path="/">
@@ -300,3 +337,21 @@ function App() {
 }
 
 ReactDOM.render(<App />, document.getElementById("root"));
+
+// inconsistencies between snake_case and camelCase - story_link vs storyId
+
+// article["storyId"] vs *article.storyId*
+
+// api naming - /remove vs /save_article - use REST
+
+// early if returns for logged in states
+
+// does save_article check if the user is logged in?
+// - maybe this could handle the alert
+
+// Use margins and padding instead of <br />
+
+// /login?username=${username}&password=${password}
+// - should be done as a POST
+
+// /profile_stories should not accept userId, it should fetch it from the session

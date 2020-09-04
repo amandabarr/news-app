@@ -82,10 +82,10 @@ class StoryTopic(db.Model):
     story_topic_id = db.Column(db.Integer,
                         autoincrement=True,
                         primary_key=True)
-    story_id = db.Column(db.Integer, db.ForeignKey('stories.story_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     topic_id = db.Column(db.Integer, db.ForeignKey('topics.topic_id'))
 
-    story = db.relationship('Story', backref='story_topics')
+    user = db.relationship('User', backref='story_topics')
     topic = db.relationship('Topic', backref='story_topics')
 
 

@@ -49,7 +49,7 @@ def get_news_articles():
 
     return jsonify(articles)
 
-@app.route("/login", methods = ["GET", "POST"])
+@app.route("/api/login", methods = ["GET", "POST"])
 def user_login():
     """Allow user to log in or option to create new account"""
 
@@ -63,6 +63,7 @@ def user_login():
     if user:
         print("user")
         session["user_id"] = user.user_id
+        session["favorite_topics"]
         # session["user"] = username
         # session["password"] = password
         # session["user_id"] = user.user_id
@@ -70,7 +71,8 @@ def user_login():
             'user': username,
             'password': password,
             'user_id': user.user_id,
-            'logged_in': True
+            'logged_in': True,
+            "favoriteTopics": ['Wellness', 'Yoga']
         })
     else:
         print("else line")
@@ -83,7 +85,7 @@ def check_user_login_setting():
     else:
         return False
 
-@app.route("/stories")
+@app.route("/api/stories")
 def fetch_stories():
     """Return news stories as JSON"""
 
@@ -110,7 +112,7 @@ def fetch_stories():
     return jsonify(articles)
 
 
-@app.route("/search", methods=["GET", "POST"])
+@app.route("/api/search", methods=["GET", "POST"])
 def topic_search():
     """Search for articles that include a specific keyword"""
 
@@ -171,8 +173,17 @@ def save_article_to_db(articles, userId):
 
     return articles
 
-@app.route("/save_article", methods = ["GET", "POST"])
+# @app.route("/api/favorites", methods = ["GET", "POST", "DELETE"])
+# def favorites_api():
+#     if (this.method == "GET") -> list favorites
+#     if (this.method == "POST") -> create favorites
+#     if (this.method == "DELETE") -> delete favorites
+
+@app.route("/api/save_article", methods = ["GET", "POST"])
 def save_article_to_favorites():
+# make it so that you have to be logged in
+    # if !session["user_id"]
+    #     return jsonify({"success": False, message: "You must be logged in" })
     # crud function to save article under specific user.  Need to get primary keys user_id and story_id and option to comment/tag
     story_id = request.args["storyId"]
     print(story_id)
@@ -182,7 +193,7 @@ def save_article_to_favorites():
 
     return jsonify({"success": True})
 
-@app.route("/profile_stories")
+@app.route("/api/profile_stories")
 def user_profile_data():
     """View user's profile and saved articles"""
 
@@ -215,7 +226,7 @@ def story_db_to_json(story, favorite):
 
     return jsonify({})
 
-@app.route("/remove")
+@app.route("/api/remove_article")
 def remove_from_favorites():
 
     story_id = request.args["storyId"]
