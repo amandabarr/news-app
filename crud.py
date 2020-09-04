@@ -1,6 +1,6 @@
 """CRUD operations. """
 
-from model import db, User, SavedStory, Story, connect_to_db
+from model import db, User, SavedStory, Story, connect_to_db, Topic, StoryTopic
 from datetime import datetime
 
 def create_user(username, email, password):
@@ -70,6 +70,32 @@ def remove_from_favorites(user_id, story_id):
 
     db.session.delete(saved_story)
     db.session.commit()
+
+def create_topic(topic_category):
+
+    """Create and return a topic by the topic name."""
+
+    topic = Topic(topic_category=topic_category)
+
+    db.session.add(topic)
+    db.session.commit()
+
+def get_topic(topic_category):
+
+    return Topic.query.filter(Topic.topic_category == topic_category).first()
+
+def save_topic(user_id, topic_id):
+    """Save a topic to user's favorites topics"""
+
+    saved_topic = StoryTopic(user_id=user_id, topic_id=topic_id)
+
+    db.session.add(saved_topic)
+    db.session.commit()
+
+def get_saved_topics_by_user(user_id):
+
+    saved_topics = db.session.query(StoryTopic).filter(StoryTopic.user_id == user_id).join(Topic).all()
+    return saved_topics
 
 
 

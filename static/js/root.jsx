@@ -35,11 +35,21 @@ function DropDown() {
     <div className="dropdown">
       <button className="dropbtn">Edit Favorites</button>
       <div className="dropdown-content">
-        <a href="#">Topic 1</a>
+        <a href="#">Business</a>
         <br />
-        <a href="#">Topic 2</a>
+        <a href="#">Entertainment</a>
         <br />
-        <a href="#">Topic 3</a>
+        <a href="#">General</a>
+        <br />
+        <a href="#">Health</a>
+        <br />
+        <a href="#">Science</a>
+        <br />
+        <a href="#">Sports</a>
+        <br />
+        <a href="#">Technology</a>
+        <a href="#">Choose your Own</a>
+        <br />
       </div>
     </div>
   );

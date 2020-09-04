@@ -170,8 +170,38 @@ def save_article_to_db(articles, userId):
         #     print(saved_story)
         #     article["favorite"] = saved_story != None
 
-
     return articles
+
+@app.route("/api/defaultCategory")
+def category_article_search(topicCategory):
+
+    url = ('https://newsapi.org/v2/top-headlines?country=us&category=' + topicCategory + '&apiKey=' + API_SECRET_KEY)
+
+    response = requests.get(url)
+
+    response_json = response.json()
+
+    articles = response_json['articles']
+
+    user = session["user_id"]
+
+    articles = save_article_to_db(articles, user)
+
+    topic = crud.get_topic(topicCategory)
+
+    if not topic:
+        crud.create_topic(topicCategory)
+
+    crud.save_topic(user, topic.topic_id)
+
+
+    return jsonify(articles)
+
+
+def save_topic():
+    pass
+
+
 
 # @app.route("/api/favorites", methods = ["GET", "POST", "DELETE"])
 # def favorites_api():

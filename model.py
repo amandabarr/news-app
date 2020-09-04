@@ -90,7 +90,7 @@ class StoryTopic(db.Model):
 
 
     def __repr__(self):
-        return f'<StoryTopic story_topic_id={self.story_topic_id} story_id={self.story_id} topic_id={self.topic_id}>'
+        return f'<StoryTopic story_topic_id={self.story_topic_id} topic_id={self.topic_id}>'
 
 
 
