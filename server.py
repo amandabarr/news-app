@@ -21,7 +21,7 @@ newsapi = NewsApiClient(api_key=API_SECRET_KEY)
 
 app = Flask(__name__)
 app.secret_key = 'dev'
-app.permanent_session_lifetime = False
+# app.permanent_session_lifetime = False
 app.jinja_env.undefined = StrictUndefined
 
 
@@ -264,8 +264,9 @@ def remove_from_favorites():
 
     story_id = request.args["storyId"]
 
-    user = session.get("user_id", 0)
-
+    user = session.get("user_id")
+    print(f"The User trying to remove the story is {user}")
+    # user = session["user_id"]
     crud.remove_from_favorites(user, story_id)
 
     return jsonify({"success": True})
@@ -282,7 +283,7 @@ def remove_from_favorites():
 
 # @app.route("/api/logout")
 def user_logout():
-    user = session.get("user_id", 0)
+    user = session.get("user_id", default = "No user")
     session.pop(key)
 
     return jsonify({
