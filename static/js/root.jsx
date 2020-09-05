@@ -8,6 +8,7 @@ const Redirect = ReactRouterDOM.Redirect;
 // render the homepage of the app, displaying mindfulness articles, a nav bar, and a search bar
 function Homepage() {
   const [articles, setArticles] = React.useState([]);
+  console.log(AuthContext);
   const onArticlesUpdated = (articles) => {
     setArticles(articles);
   };
@@ -145,7 +146,7 @@ function NewsListItem(props) {
   const [isFavorite, setIsFavorite] = React.useState(props.favorite);
   const handleFavorite = (event) => {
     event.preventDefault();
-    if (loginData["isLoggedIn"]) {
+    if (loginData.isLoggedIn) {
       // GET /api/favorites - list a user's favorites
       // use this for profile
       // POST /api/favorites - create a favorite
@@ -234,11 +235,9 @@ function Login() {
         });
       });
   };
-  if (loginData["isLoggedIn"] == true) {
-    return <Redirect to="/" />;
-  }
+
   let loginButton;
-  if (loginData["isLoggedIn"] == true) {
+  if (loginData.isLoggedIn == true) {
     return <Redirect to="/" />;
   }
 
@@ -268,14 +267,14 @@ function Login() {
 // display the user's profile page with the user's saved articles
 function Profile(props) {
   const { loginData } = React.useContext(AuthContext);
-  console.log(Object.keys(loginData));
+  console.log(Object.values(loginData));
   const [articles, setArticles] = React.useState([]);
   const onArticlesUpdated = (articles) => {
     setArticles(articles);
   };
 
   React.useEffect(() => {
-    fetch(`/api/profile_stories?userId${loginData["userId"]}`)
+    fetch(`/api/profile_stories?userId=${loginData["userId"]}`)
       .then((response) => response.json())
       .then((articles) => {
         console.log(articles);
@@ -298,14 +297,23 @@ function Profile(props) {
 
 // Context hook, so the user's log in status can be passed to multiple components
 const AuthContext = React.createContext({});
-console.log(AuthContext);
 
 // nav bar component  set state [{home: /}, {login: /login}, profile{route: /profile, title: profile}]
 //map over state (built-in method for arrays),
 // get user's fav topics, add topics to nav bar(append new), update the state
 
 function App() {
-  const [loginData, setLoginData] = React.useState({ favoriteTopics: [] });
+  const [loginData, setLoginData] = React.useState({
+    isLoggedIn: null,
+    userId: null,
+    favoriteTopics: [],
+  });
+  let loginLogoutButton;
+  if (loginData.isLoggedIn === true) {
+    loginLogoutButton = <Link to="/api/logout">Log Out</Link>;
+  } else {
+    loginLogoutButton = <Link to="/api/login">Log In</Link>;
+  }
 
   return (
     <AuthContext.Provider value={{ loginData, setLoginData }}>
@@ -316,9 +324,7 @@ function App() {
               <li>
                 <Link to="/"> Home </Link>
               </li>
-              <li>
-                <Link to="/api/login"> Log In </Link>
-              </li>
+              <li>{loginLogoutButton}</li>
               <li>
                 <Link to="/api/profile"> Profile </Link>
               </li>

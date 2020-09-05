@@ -45,7 +45,7 @@ class Story(db.Model):
     source = db.Column(db.String, nullable=False)
     title = db.Column(db.String, nullable=False)
     author = db.Column(db.String)
-    description = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text, nullable=True)
     story_link = db.Column(db.String, unique=True, nullable=False)
     image = db.Column(db.String, nullable=True)
     content = db.Column(db.Text, nullable=True)

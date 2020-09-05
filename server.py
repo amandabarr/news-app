@@ -17,8 +17,11 @@ TODAY = date.today().strftime("%Y-/%m-/%d")
 
 newsapi = NewsApiClient(api_key=API_SECRET_KEY)
 
+
+
 app = Flask(__name__)
 app.secret_key = 'dev'
+app.permanent_session_lifetime = False
 app.jinja_env.undefined = StrictUndefined
 
 
@@ -44,7 +47,7 @@ def get_news_articles():
 
     # articles = save_article_to_db(articles)
 
-    user = session["user_id"]
+    user = session.get("user_id", 0)
     save_article_to_db(articles, user)
 
     return jsonify(articles)
@@ -61,8 +64,9 @@ def user_login():
 
     print(user)
     if user:
-        print("user")
+        print(f"User {user}")
         session["user_id"] = user.user_id
+        session["logged_in"] = True
         # session["favorite_topics"]
         # session["user"] = username
         # session["password"] = password
@@ -75,15 +79,8 @@ def user_login():
             "favoriteTopics": ['Wellness', 'Yoga']
         })
     else:
-        print("else line")
         return "error - this is not working"
 
-def check_user_login_setting():
-
-    if "user_id" in session:
-        return True
-    else:
-        return False
 
 @app.route("/api/stories")
 def fetch_stories():
@@ -103,7 +100,7 @@ def fetch_stories():
 
     articles = response_json['articles']
 
-    user = session["user_id"]
+    user = session.get("user_id", 0)
 
     articles = save_article_to_db(articles, user)
 
@@ -130,7 +127,7 @@ def topic_search():
 
     articles = response_json['articles']
 
-    user = session["user_id"]
+    user = session.get("user_id", 0)
 
     articles = save_article_to_db(articles, user)
 
@@ -183,7 +180,7 @@ def category_article_search(topicCategory):
 
     articles = response_json['articles']
 
-    user = session["user_id"]
+    user = session.get("user_id", 0)
 
     articles = save_article_to_db(articles, user)
 
@@ -196,6 +193,7 @@ def category_article_search(topicCategory):
 
 
     return jsonify(articles)
+
 
 
 def save_topic():
@@ -217,24 +215,29 @@ def save_article_to_favorites():
     # crud function to save article under specific user.  Need to get primary keys user_id and story_id and option to comment/tag
     story_id = request.args["storyId"]
     print(story_id)
-    # session["user_id"]
+    user = session.get("user_id", 0)
 
-    crud.save_story(session["user_id"], story_id)
+    if user:
+        crud.save_story(user, story_id)
 
     return jsonify({"success": True})
+
+
+
 
 @app.route("/api/profile_stories")
 def user_profile_data():
     """View user's profile and saved articles"""
 
-    user_id = session["user_id"]
+    user = request.args["userId"]
 
-    profile_stories = crud.get_saved_stories_by_user(user_id)
+    profile_stories = crud.get_saved_stories_by_user(user)
     print(profile_stories)
 
     story_list = [story_db_to_json(story, True) for story in profile_stories]
 
     return jsonify(story_list)
+
 
 def story_db_to_json(story, favorite):
 
@@ -261,11 +264,10 @@ def remove_from_favorites():
 
     story_id = request.args["storyId"]
 
-    user = session["user_id"]
+    user = session.get("user_id", 0)
 
     crud.remove_from_favorites(user, story_id)
 
-    jsonify({"success": True})
     return jsonify({"success": True})
 
 
@@ -278,10 +280,17 @@ def remove_from_favorites():
 #     # { name: 'Amanda', topics: ['Cats', 'Dogs', 'Business'] }
 #     return session
 
-# @app.route("/logout")
-# def user_logout():
-#     session.pop("username", None)
-#     return redirect(url_for("login"))
+# @app.route("/api/logout")
+def user_logout():
+    user = session.get("user_id", 0)
+    session.pop(key)
+
+    return jsonify({
+            'user': "",
+            'password': "",
+            'user_id': None,
+            'logged_in': False,
+            "favoriteTopics": []})
 
 
 def create_account():
