@@ -183,9 +183,21 @@ function NewsListItem(props) {
     ? "Remove from Favorites"
     : "Save to Favorites";
   return (
-    <div>
+    <div className="card">
+      <img src={props.image} class="card-img-top" alt="..." />
+      <div className="card-body">
+        <h5 className="card-title">{props.title}</h5>
+        <h6 className="card-title">{props.source}</h6>
+        <p className="card-text">{props.content}</p>
+        <button id="favorite" onClick={handleFavorite}>
+          {favoriteButtonLabel}
+        </button>
+      </div>
+    </div>
+
+    /* <div class="card" style="width 18rem">
       {console.log(props.storyId)}
-      <a href={props.story_link}>{props.title}</a>
+      <a href={props.story_link} class="card-link">{props.title}</a>
       <br />
       {props.source}
       <br />
@@ -198,7 +210,7 @@ function NewsListItem(props) {
       <button id="favorite" onClick={handleFavorite}>
         {favoriteButtonLabel}
       </button>
-    </div>
+    </div> */
   );
 }
 
