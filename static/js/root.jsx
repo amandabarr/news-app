@@ -200,23 +200,6 @@ function NewsListItem(props) {
         </div>
       </div>
     </div>
-
-    /* <div class="card" style="width 18rem">
-      {console.log(props.storyId)}
-      <a href={props.story_link} class="card-link">{props.title}</a>
-      <br />
-      {props.source}
-      <br />
-      {props.published}
-      <br />
-      {articleImage}
-      <br />
-      {props.content}
-      <br />
-      <button id="favorite" onClick={handleFavorite}>
-        {favoriteButtonLabel}
-      </button>
-    </div> */
   );
 }
 
@@ -283,6 +266,67 @@ function Login(props) {
           onChange={handlePasswordChange}
         ></input>
         <button type="submit"> Login </button>
+      </form>
+    </div>
+  );
+}
+
+function CreateAccount(props) {
+  const [username, setUserName] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [userId, setUserId] = React.useState("");
+  const { loginData, setLoginData } = React.useContext(AuthContext);
+  console.log("login AuthContext", loginData);
+
+  const handleUsernameChange = (event) => {
+    event.preventDefault();
+    console.log(event);
+    setUserName(event.target.value);
+  };
+  const handlePasswordChange = (event) => {
+    event.preventDefault();
+    console.log(event);
+    setPassword(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(username, password);
+    fetch("/create_account", {
+      method: "POST",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setUserName(data["username"]);
+        setPassword(data["password"]);
+        setUserId(data["user_id"]);
+        console.log(userId);
+        setLoginData({
+          isLoggedIn: data["logged_in"],
+          userId: data["user_id"],
+          favoriteTopics: data.favoriteTopics,
+        });
+      });
+  };
+  return (
+    <div name="createAccount">
+      <form id="createAccount" onSubmit={handleSubmit}>
+        Username:
+        <input
+          value={username}
+          id="username"
+          type="text"
+          onChange={handleUsernameChange}
+        ></input>
+        Password:
+        <input
+          value={password}
+          id="password"
+          type="text"
+          onChange={handlePasswordChange}
+        ></input>
+        <button type="submit"> Create Account </button>
       </form>
     </div>
   );
@@ -364,6 +408,9 @@ function App() {
               <li>
                 <Link to="/"> Home </Link>
               </li>
+              <li>
+                <Link to="/create_account"> Sign Up </Link>
+              </li>
               <li>{loginLogoutButton}</li>
               <li>
                 <Link to="/api/profile"> Profile </Link>
@@ -383,6 +430,9 @@ function App() {
             </Route>
             <Route path="/api/login">
               <Login />
+            </Route>
+            <Route path="/create_account">
+              <CreateAccount />
             </Route>
             <Route path="/">
               <Homepage />

@@ -14,6 +14,7 @@ from jinja2 import StrictUndefined
 
 API_SECRET_KEY = os.environ.get('API_KEY')
 TODAY = date.today().strftime("%Y-/%m-/%d")
+# NOW = datetime.now()
 
 newsapi = NewsApiClient(api_key=API_SECRET_KEY)
 
@@ -60,7 +61,7 @@ def get_news_articles():
 
 @app.route("/api/login", methods = ["GET", "POST"])
 def user_login():
-    """Allow user to log in or option to create new account"""
+    """Allow user to log in to their existing account"""
 
     username = request.args["username"]
 
@@ -304,12 +305,14 @@ def user_logout():
     return jsonify({
             "success": True})
 
-
+@app.route("/create_account", methods = ["GET", "POST"])
 def create_account():
     """Allow a new user to create an account"""
 
-    username = request.form.get('username')
-    password = request.form.get('password')
+    username = request.args["username"]
+
+    password = request.args["password"]
+
 
     user = crud.get_user(username, password)
 
@@ -318,7 +321,14 @@ def create_account():
     else:
         crud.create_user(email, password)
         flash('Account created! Please log in.')
-    pass
+
+    return jsonify({
+            'username': username,
+            'password': password,
+            'user_id': user.user_id,
+            'logged_in': True,
+            "favoriteTopics": ['Wellness', 'Yoga']
+        })
 
 
 
