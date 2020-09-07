@@ -1,6 +1,6 @@
 """Server for news app."""
 
-from flask import Flask, render_template, request, flash, session, redirect, jsonify
+from flask import Flask, render_template, request, flash, session, redirect, jsonify, escape
 from model import connect_to_db
 from datetime import date, datetime
 import json
@@ -27,6 +27,7 @@ app.jinja_env.undefined = StrictUndefined
 
 @app.route("/")
 def root():
+
     return render_template("root.html")
 
 @app.route("/api/top-news")
@@ -49,6 +50,11 @@ def get_news_articles():
 
     user = session.get("user_id", 0)
     save_article_to_db(articles, user)
+
+    if 'user_id' in session:
+        print('Hey, {}!'.format(escape(session['user_id'])))
+    else:
+        print('You are not signed in!')
 
     return jsonify(articles)
 
@@ -281,17 +287,22 @@ def remove_from_favorites():
 #     # { name: 'Amanda', topics: ['Cats', 'Dogs', 'Business'] }
 #     return session
 
-# @app.route("/api/logout")
+@app.route("/api/logout")
 def user_logout():
-    user = session.get("user_id", default = "No user")
-    session.pop(key)
+    user = session.get("user_id")
+    logged_in = session.get("logged_in")
+    favorite_topics = session.get("favoriteTopics")
+    print(f"The current user information is: {session.keys()}")
+
+    session.pop("user_id")
+    session.pop("logged_in")
+    # session.pop("favoriteTopics")
+    print(f"Now The current user information is: {session.keys()}")
+
+    # return (f"user_id: {user_id}")
 
     return jsonify({
-            'user': "",
-            'password': "",
-            'user_id': None,
-            'logged_in': False,
-            "favoriteTopics": []})
+            "success": True})
 
 
 def create_account():

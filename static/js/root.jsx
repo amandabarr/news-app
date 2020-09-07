@@ -76,6 +76,10 @@ function SearchBar(props) {
     setSearchQuery(event.target.value);
   };
 
+  const resetForm = () => {
+    setSearchQuery("search topic");
+  };
+
   return (
     <div>
       <form id="search_form" onSubmit={handleSubmit}>
@@ -199,7 +203,7 @@ function NewsListItem(props) {
 }
 
 // user can log in to their account, save news articles, and see these articles displayed on their profile page
-function Login() {
+function Login(props) {
   const [username, setUserName] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [userId, setUserId] = React.useState("");
@@ -220,14 +224,16 @@ function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(username, password);
-    fetch(`/api/login?username=${username}&password=${password}`)
+    fetch(`/api/login?username=${username}&password=${password}`, {
+      method: "POST",
+      credentials: "include",
+    })
       .then((response) => response.json())
       .then((data) => {
         setUserName(data["username"]);
         setPassword(data["password"]);
         setUserId(data["user_id"]);
         console.log(userId);
-        // setLoginData(data)
         setLoginData({
           isLoggedIn: data["logged_in"],
           userId: data["user_id"],
@@ -237,7 +243,7 @@ function Login() {
   };
 
   let loginButton;
-  if (loginData.isLoggedIn == true) {
+  if (loginData.isLoggedIn) {
     return <Redirect to="/" />;
   }
 
@@ -282,11 +288,13 @@ function Profile(props) {
       });
   }, []);
 
-  return (
+  return loginData.isLoggedIn ? (
     <div>
       <SearchBar onArticlesUpdated={onArticlesUpdated} />
       <NewsList articles={articles} />
     </div>
+  ) : (
+    <p>Please Log In to see your saved articles</p>
   );
 }
 
@@ -297,6 +305,7 @@ function Profile(props) {
 
 // Context hook, so the user's log in status can be passed to multiple components
 const AuthContext = React.createContext({});
+const useAuthState = () => React.useContext(AuthContext);
 
 // nav bar component  set state [{home: /}, {login: /login}, profile{route: /profile, title: profile}]
 //map over state (built-in method for arrays),
@@ -308,9 +317,22 @@ function App() {
     userId: null,
     favoriteTopics: [],
   });
+  const logout = () => {
+    fetch("/api/logout")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        console.log("Your User ID is:", loginData);
+        setLoginData({
+          isLoggedIn: null,
+          userId: null,
+          favoriteTopics: [],
+        });
+      });
+  };
   let loginLogoutButton;
   if (loginData.isLoggedIn === true) {
-    loginLogoutButton = <Link to="/api/logout">Log Out</Link>;
+    loginLogoutButton = <Link onClick={logout}>Log Out</Link>;
   } else {
     loginLogoutButton = <Link to="/api/login">Log In</Link>;
   }
