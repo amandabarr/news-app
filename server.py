@@ -119,6 +119,7 @@ def fetch_stories():
 @app.route("/api/search", methods=["GET", "POST"])
 def topic_search():
     """Search for articles that include a specific keyword"""
+    print("This is a test")
 
     topic_keyword = request.args["topic_keyword"]
 
@@ -176,8 +177,10 @@ def save_article_to_db(articles, userId):
 
     return articles
 
-@app.route("/api/defaultCategory")
-def category_article_search(topicCategory):
+@app.route("/topicCategory", methods=["GET", "POST"])
+def category_article_search():
+
+    topicCategory = request.args["topicCategory"]
 
     url = ('https://newsapi.org/v2/top-headlines?country=us&category=' + topicCategory + '&apiKey=' + API_SECRET_KEY)
 
@@ -187,16 +190,16 @@ def category_article_search(topicCategory):
 
     articles = response_json['articles']
 
-    user = session.get("user_id", 0)
+    user = session.get("user_id", None)
 
     articles = save_article_to_db(articles, user)
 
-    topic = crud.get_topic(topicCategory)
+    # topic = crud.get_topic(topicCategory)
 
-    if not topic:
-        crud.create_topic(topicCategory)
+    # if not topic:
+    #     crud.create_topic(topicCategory)
 
-    crud.save_topic(user, topic.topic_id)
+    # crud.save_topic(user, topic.topic_id)
 
 
     return jsonify(articles)

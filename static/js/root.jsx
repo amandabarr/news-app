@@ -4,8 +4,9 @@ const Link = ReactRouterDOM.Link;
 const Prompt = ReactRouterDOM.Prompt;
 const Switch = ReactRouterDOM.Switch;
 const Redirect = ReactRouterDOM.Redirect;
+const useParams = ReactRouterDOM.useParams;
 const { Navbar } = ReactBootstrap;
-const { Nav } = ReactBootstrap;
+const { Nav, NavDropdown } = ReactBootstrap;
 const { LinkContainer } = ReactRouterBootstrap;
 const { Card } = ReactBootstrap;
 const { Button } = ReactBootstrap;
@@ -40,13 +41,12 @@ function Homepage() {
 // will have to update user favorite topics once selected
 
 function DropDown() {
-  // const [isVisible, setIsVisible] = React.useState();
   return (
     <div className="dropdown">
       <form>
         <label>Add Favorite Topic </label>
         <select id="topics" name="topicCategory">
-          <option value="test123">Business</option>
+          <option value="Business">Business</option>
           <option value="Entertainment">Entertainment</option>
           <option value="General">General</option>
           <option value="Health">Health</option>
@@ -82,7 +82,7 @@ function SearchBar(props) {
   };
 
   const resetForm = () => {
-    setSearchQuery("search topic");
+    setSearchQuery("");
   };
 
   return (
@@ -101,7 +101,35 @@ function SearchBar(props) {
   );
 }
 
-//
+function TopicCategory(props) {
+  const { topicCategory } = useParams();
+
+  const [articles, setArticles] = React.useState([]);
+  console.log(AuthContext);
+  const onArticlesUpdated = (articles) => {
+    setArticles(articles);
+  };
+
+  React.useEffect(() => {
+    fetch(`/topicCategory?topicCategory=${topicCategory}`)
+      .then((response) => response.json())
+      .then((articles) => {
+        console.log(articles);
+        onArticlesUpdated(articles);
+      });
+  }, [topicCategory]);
+
+  // const [topicCategory, setTopicCategory] = React.useState("");
+  // const onChange = (event) => {
+  //   setTopicCategory(event.target.value);
+  // };
+  return (
+    <div>
+      <SearchBar onArticlesUpdated={onArticlesUpdated} />
+      <NewsList articles={articles} />
+    </div>
+  );
+}
 
 function NewsList(props) {
   const newsList = [];
@@ -411,10 +439,37 @@ function App() {
                 <LinkContainer to="/">
                   <Nav.Link href="/">Home</Nav.Link>
                 </LinkContainer>
+                <LinkContainer to="/api/topicCategory">
+                  <Nav.Link> General </Nav.Link>
+                </LinkContainer>
                 <LinkContainer to="/api/profile">
                   <Nav.Link> Profile </Nav.Link>
                 </LinkContainer>
                 {loginLogoutButton}
+                <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+                  <LinkContainer to="/api/topicCategory/business">
+                    <NavDropdown.Item>Business</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/api/topicCategory/entertainment">
+                    <NavDropdown.Item>Entertainment</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/api/topicCategory/general">
+                    <NavDropdown.Item>General</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/api/topicCategory/health">
+                    <NavDropdown.Item>Health</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/api/topicCategory/science">
+                    <NavDropdown.Item>Science</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/api/topicCategory/sports">
+                    <NavDropdown.Item>Sports</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/api/topicCategory/technology">
+                    <NavDropdown.Item>Technology</NavDropdown.Item>
+                  </LinkContainer>
+                  <NavDropdown.Divider />
+                </NavDropdown>
 
                 {/* <Nav.Link href="/api/profile">Profile</Nav.Link> */}
               </Nav>
@@ -423,6 +478,9 @@ function App() {
           <Switch>
             <Route path="/api/profile">
               <Profile />
+            </Route>
+            <Route path="/api/topicCategory/:topicCategory">
+              <TopicCategory />
             </Route>
             <Route path="/api/login">
               <Login />
