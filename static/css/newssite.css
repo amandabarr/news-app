@@ -1,5 +1,17 @@
+.Navigation {
+  background-color: #945d60;
+  font-family: Roboto;
+  color: #98878f;
+}
+
+.Brand {
+  font-family: Roboto;
+  color: whitesmoke;
+  font-weight: 700;
+}
+
 /* body {
-  background-color: #192231;
+  background-color: #cccbc6;
   font-family: Kumbh Sans;
   font-weight: 700;
 } */
@@ -17,6 +29,7 @@
   font-family: Roboto;
   color: #98878f;
 }
+
 
 a {
   color: #98878f;

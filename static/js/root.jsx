@@ -9,7 +9,7 @@ const useLocation = ReactRouterDOM.useLocation;
 const { Navbar } = ReactBootstrap;
 const { Nav, NavDropdown } = ReactBootstrap;
 const { LinkContainer } = ReactRouterBootstrap;
-const { Card } = ReactBootstrap;
+const { Card, CardColumns } = ReactBootstrap;
 const { Button } = ReactBootstrap;
 const { Form } = ReactBootstrap;
 const { FormControl } = ReactBootstrap;
@@ -32,7 +32,7 @@ function Homepage() {
   }, []);
 
   return (
-    <div>
+    <div id="articles">
       <NewsList articles={articles} />
     </div>
   );
@@ -136,7 +136,7 @@ function NewsList(props) {
 
   return (
     <div>
-      <ul>{newsList}</ul>
+      <CardColumns>{newsList}</CardColumns>
     </div>
   );
 }
@@ -149,19 +149,6 @@ function NewsListItem(props) {
   } else {
     articleImage = <div>No image</div>;
   }
-
-  // if (!loginData["isLoggedIn"])
-  //   return alert("You need to be signed in to favorite an article");
-
-  // fetch(`/api/favorites?storyId=${props.storyId}`, { method: isFavorite ? 'DELETE' : 'POST' })
-  //   .then((response) => response.json())
-  //   .then((json) => {
-  //     if (json["success"]) {
-  //       setIsFavorite(json.isFavorite);
-  //     } else {
-  //       alert(json.message)
-  //     }
-  //   });
 
   // a user can save an article to their favorites, or remove a saved article
   // if user is not logged in, alert notifies user to login to save an article
@@ -201,10 +188,14 @@ function NewsListItem(props) {
     ? "Remove from Favorites"
     : "Save to Favorites";
   return (
-    <Card style={{ width: "40rem" }}>
-      <Card.Img variant="top" src={props.image} />
+    <Card className="p-2" style={{ width: "25rem" }}>
+      <a href={props.story_link}>
+        <Card.Img variant="top" src={props.image} />
+      </a>
       <Card.Body>
-        <Card.Title>{props.title}</Card.Title>
+        <a href={props.story_link}>
+          <Card.Title>{props.title}</Card.Title>
+        </a>
         <Card.Text>{props.content}</Card.Text>
         <a
           className="resp-sharing-button__link"
@@ -420,8 +411,8 @@ function App() {
     <AuthContext.Provider value={{ loginData, setLoginData }}>
       <Router>
         <div>
-          <Navbar bg="light" expand="lg">
-            <Navbar.Brand>Mindful News</Navbar.Brand>
+          <Navbar className="Navigation" expand="lg">
+            <Navbar.Brand className="Brand">Mindful News</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
@@ -465,7 +456,7 @@ function App() {
               <Form inline>
                 <FormControl
                   type="text"
-                  placeholder="Search"
+                  placeholder="Search a Topic"
                   className="mr-sm-2"
                   onChange={handleSearchChange}
                 />
