@@ -236,7 +236,7 @@ def save_article_to_favorites():
 def user_profile_data():
     """View user's profile and saved articles"""
 
-    user = request.args["userId"]
+    user = session.get("user_id", None)
 
     profile_stories = crud.get_saved_stories_by_user(user)
     print(profile_stories)
