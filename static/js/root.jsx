@@ -5,11 +5,14 @@ const Prompt = ReactRouterDOM.Prompt;
 const Switch = ReactRouterDOM.Switch;
 const Redirect = ReactRouterDOM.Redirect;
 const useParams = ReactRouterDOM.useParams;
+const useLocation = ReactRouterDOM.useLocation;
 const { Navbar } = ReactBootstrap;
 const { Nav, NavDropdown } = ReactBootstrap;
 const { LinkContainer } = ReactRouterBootstrap;
 const { Card } = ReactBootstrap;
 const { Button } = ReactBootstrap;
+const { Form } = ReactBootstrap;
+const { FormControl } = ReactBootstrap;
 
 // render the homepage of the app, displaying mindfulness articles, a nav bar, and a search bar
 function Homepage() {
@@ -30,7 +33,6 @@ function Homepage() {
 
   return (
     <div>
-      <SearchBar onArticlesUpdated={onArticlesUpdated} />
       <NewsList articles={articles} />
     </div>
   );
@@ -63,44 +65,6 @@ function DropDown() {
   );
 }
 
-// allow a user to search for a specific topic keyword
-function SearchBar(props) {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const searchArgs = { topic_keyword: searchQuery };
-    fetch(`/api/search?topic_keyword=${searchQuery}`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        props.onArticlesUpdated(data);
-      });
-  };
-
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const handleChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const resetForm = () => {
-    setSearchQuery("");
-  };
-
-  return (
-    <div>
-      <form id="search_form" onSubmit={handleSubmit}>
-        <input
-          value={searchQuery}
-          id="topic_keyword"
-          type="text"
-          placeholder="search topic"
-          onChange={handleChange}
-        />
-        <button type="submit">Search</button>
-      </form>
-    </div>
-  );
-}
-
 function TopicCategory(props) {
   const { topicCategory } = useParams();
 
@@ -119,13 +83,34 @@ function TopicCategory(props) {
       });
   }, [topicCategory]);
 
-  // const [topicCategory, setTopicCategory] = React.useState("");
-  // const onChange = (event) => {
-  //   setTopicCategory(event.target.value);
-  // };
   return (
     <div>
-      <SearchBar onArticlesUpdated={onArticlesUpdated} />
+      <NewsList articles={articles} />
+    </div>
+  );
+}
+
+function Search(props) {
+  const queryParams = useQuery();
+  const query = queryParams.get("q");
+
+  const [articles, setArticles] = React.useState([]);
+  console.log(AuthContext);
+  const onArticlesUpdated = (articles) => {
+    setArticles(articles);
+  };
+
+  React.useEffect(() => {
+    fetch(`/api/search?topic_keyword=${query}`)
+      .then((response) => response.json())
+      .then((articles) => {
+        console.log(articles);
+        onArticlesUpdated(articles);
+      });
+  }, [query]);
+
+  return (
+    <div>
       <NewsList articles={articles} />
     </div>
   );
@@ -371,7 +356,6 @@ function Profile(props) {
 
   return loginData.isLoggedIn ? (
     <div>
-      <SearchBar onArticlesUpdated={onArticlesUpdated} />
       <NewsList articles={articles} />
     </div>
   ) : (
@@ -427,6 +411,11 @@ function App() {
     );
   }
 
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   return (
     <AuthContext.Provider value={{ loginData, setLoginData }}>
       <Router>
@@ -473,6 +462,17 @@ function App() {
 
                 {/* <Nav.Link href="/api/profile">Profile</Nav.Link> */}
               </Nav>
+              <Form inline>
+                <FormControl
+                  type="text"
+                  placeholder="Search"
+                  className="mr-sm-2"
+                  onChange={handleSearchChange}
+                />
+                <LinkContainer to={`/search?q=${searchQuery}`}>
+                  <Button variant="outline-success">Search</Button>
+                </LinkContainer>
+              </Form>
             </Navbar.Collapse>
           </Navbar>
           <Switch>
@@ -481,6 +481,9 @@ function App() {
             </Route>
             <Route path="/api/topicCategory/:topicCategory">
               <TopicCategory />
+            </Route>
+            <Route path="/search">
+              <Search />
             </Route>
             <Route path="/api/login">
               <Login />
@@ -493,6 +496,10 @@ function App() {
       </Router>
     </AuthContext.Provider>
   );
+}
+
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
 }
 
 ReactDOM.render(<App />, document.getElementById("root"));
