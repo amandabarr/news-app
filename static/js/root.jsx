@@ -344,12 +344,26 @@ function Profile(props) {
 
 function MindfulAlert(props) {
   return (
-    <div className="text-center">
-      <Alert variant="dark" onClose={props.onAlertClosed} dismissible>
-        <Alert.Heading>Mindfulness Break</Alert.Heading>
-        <p>Take a few deep breaths!</p>
-      </Alert>
-    </div>
+    // React fragment
+
+    <Modal show={props.showMindfulMessage} onHide={props.onAlertClosed}>
+      <Modal.Header closeButton>
+        <Modal.Title>Modal heading</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={props.onAlertClosed}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
+
+    // <div className="text-center">
+    //   <Alert variant="dark" onClose={props.onAlertClosed} dismissible>
+    //     <Alert.Heading>Mindfulness Break</Alert.Heading>
+    //     <p>Take a few deep breaths!</p>
+    //   </Alert>
+    // </div>
   );
 }
 
@@ -367,18 +381,13 @@ function App() {
   const startTimer = () => {
     setTimeout(() => {
       setShowMindfulMessage(true);
-    }, 60000);
+    }, 10000000);
   };
 
   const onMindfulnessAlertClosed = () => {
     setShowMindfulMessage(false);
     startTimer();
   };
-  const alertHtml = showMindfulMessage ? (
-    <MindfulAlert onAlertClosed={onMindfulnessAlertClosed} />
-  ) : (
-    ""
-  );
 
   React.useEffect(() => startTimer(), []);
 
@@ -493,7 +502,10 @@ function App() {
               </LinkContainer>
             </Nav.Item>
           </Nav>
-          {alertHtml}
+          <MindfulAlert
+            showMindfulMessage={showMindfulMessage}
+            onAlertClosed={onMindfulnessAlertClosed}
+          />
           <Switch>
             <Route path="/api/profile">
               <Profile />
