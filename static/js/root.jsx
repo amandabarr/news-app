@@ -280,32 +280,6 @@ function Login(props) {
   }
 
   return (
-    //     <Form>
-    //   <Form.Group controlId="formBasicEmail">
-    //     <Form.Label>Username</Form.Label>
-    //     <Form.Control value={username}
-    //           id="username"
-    //           type="text"
-    //           onChange={handleUsernameChange} placeholder="Enter username" />
-    //     <Form.Text className="text-muted">
-    //       We'll never share your email with anyone else.
-    //     </Form.Text>
-    //   </Form.Group>
-
-    //   <Form.Group controlId="formBasicPassword">
-    //     <Form.Label>Password</Form.Label>
-    //     <Form.Control value={password}
-    //           id="password"
-    //           type="text"
-    //           onChange={handlePasswordChange} placeholder="Password" />
-    //   </Form.Group>
-    //   <Form.Group controlId="formBasicCheckbox">
-    //     <Form.Check type="checkbox" label="Check me out" />
-    //   </Form.Group>
-    //   <Button variant="primary" type="submit">
-    //     Submit
-    //   </Button>
-    // </Form>
     <div name="login">
       <form id="login_form" align="center" onSubmit={handleSubmit}>
         Username:
@@ -356,7 +330,9 @@ function Profile(props) {
           </Container>
         </Jumbotron>
       </div>
-      <NewsList articles={articles} />
+      <div id="profileArticles">
+        <NewsList articles={articles} />
+      </div>
     </div>
   ) : (
     <div className="text-center">
@@ -367,19 +343,13 @@ function Profile(props) {
         </Container>
       </Jumbotron>
     </div>
-    // <p>Please Log In to see your saved articles</p>
   );
 }
-
-// mindfulness timer that pops alert after a period of time
-// setInterval(function () {
-//   alert("Take a deep breath");
-// }, 10000);
 
 function MindfulAlert(props) {
   return (
     <div className="text-center">
-      <Alert variant="danger" onClose={props.onAlertClosed} dismissible>
+      <Alert variant="dark" onClose={props.onAlertClosed} dismissible>
         <Alert.Heading>Mindfulness Break</Alert.Heading>
         <p>Take a few deep breaths!</p>
       </Alert>
@@ -459,7 +429,7 @@ function App() {
     <AuthContext.Provider value={{ loginData, setLoginData }}>
       <Router>
         <div>
-          {/* {alertHtml} */}
+          {alertHtml}
           <Navbar className="Navigation" expand="lg">
             <Navbar.Brand className="Brand">Mindful News</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -567,8 +537,6 @@ ReactDOM.render(<App />, document.getElementById("root"));
 
 // does save_article check if the user is logged in?
 // - maybe this could handle the alert
-
-// Use margins and padding instead of <br />
 
 // /login?username=${username}&password=${password}
 // - should be done as a POST

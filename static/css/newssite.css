@@ -123,6 +123,13 @@ div.justify-content-center.nav {
 a.nav-link {
   color: #22252c;
   font-family: Roboto;
+  font-size: large;
+}
+
+a.active.nav-link {
+  color: #e14658;
+  font-family: Roboto;
+  font-size: large;
 }
 
 /* Cards */
