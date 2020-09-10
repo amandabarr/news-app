@@ -1,3 +1,4 @@
+/* Navigation Bars */
 .Navigation {
   background-color: #22252c;
   font-family: Roboto;
@@ -63,11 +64,13 @@
   font-family: Roboto;
 }
 
+/* Articles */
+
 /* .articleCards {
   height: 10rem;
   width: 20rem;
 } */
-/* article */
+
 div#articles {
   /* background-color:; */
   font-family: Roboto;
@@ -85,6 +88,12 @@ div#articles {
 .card {
   color: #22252c;
   font-family: Kumbh Sans;
+}
+
+.card-footer {
+  border-bottom-style: solid;
+  border: #22252c;
+  font-family: Roboto;
 }
 
 image.card-image-top {
@@ -135,43 +144,12 @@ a.active.nav-link {
 
 /* Cards */
 
-.card-footer {
-  border-bottom-style: solid;
-  border: #22252c;
-  font-family: Roboto;
-}
-
 div.jumbotron.jumbotron-fluid {
   align-items: center;
   background-color: #f4f4f4;
   color: #22252c;
   font-family: Roboto;
 }
-
-/* body {
-  background-color: #cccbc6;
-  font-family: Kumbh Sans;
-  font-weight: 700;
-} */
-
-/* div {
-  background-color: #192231;
-  font-family: Roboto;
-  color: #98878f;
-  margin-left: auto;
-  margin-right: auto;
-} */
-
-/* div.navigation {
-  background-color: #031424;
-  font-family: Roboto;
-  color: #98878f;
-}
-
-
-a {
-  color: #98878f;
-} */
 
 /* font-family: "Kumbh Sans", sans-serif;
 font-family: "Montserrat", sans-serif;
