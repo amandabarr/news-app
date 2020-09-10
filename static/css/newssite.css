@@ -1,13 +1,65 @@
 .Navigation {
-  background-color: #945d60;
+  background-color: #22252c;
   font-family: Roboto;
-  color: #98878f;
+  color: #f4f4f4;
+}
+.Navigation.navbar.navbar-expand-lg.navbar-light {
+  color: #f4f4f4;
+  font-family: Roboto;
+}
+
+.navbar-light .navbar-brand {
+  color: #f4f4f4;
+  font-family: Roboto;
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: #f4f4f4;
+  font-family: Roboto;
+}
+
+.nav-link {
+  color: #f4f4f4;
+  font-family: Roboto;
+}
+
+.active.nav-link {
+  color: #f4f4f4;
+  font-family: Roboto;
+}
+
+.navbar-light .navbar-nav .active > .nav-link,
+.navbar-light .navbar-nav .nav-link.active,
+.navbar-light .navbar-nav .nav-link.show,
+.navbar-light .navbar-nav .show > .nav-link {
+  font-family: Roboto;
+  color: #f4f4f4;
+  font-weight: 700;
+}
+
+#secondaryNavigation .activen.nav-link {
+  color: #22252c;
+  font-family: Roboto;
 }
 
 .Brand {
   font-family: Roboto;
-  color: whitesmoke;
+  color: #f4f4f4;
   font-weight: 700;
+}
+
+.btn-primary {
+  background-color: #f4f4f4;
+  color: #22252c;
+  border-color: #f4f4f4;
+  font-family: Roboto;
+}
+
+#favorite {
+  background-color: #22252c;
+  color: #f4f4f4;
+  border-color: #22252c;
+  font-family: Roboto;
 }
 
 /* .articleCards {
@@ -20,11 +72,18 @@ div#articles {
   font-family: Roboto;
   display: flex;
   padding-top: 80px;
+  background: #f4f4f4;
+  border: #22252c;
 }
 .card-columns .card {
   margin-top: 2rem;
   align-items: center;
   /* height: 20; */
+}
+
+.card {
+  color: #22252c;
+  font-family: Roboto;
 }
 
 image.card-image-top {
@@ -35,12 +94,13 @@ image.card-image-top {
 }
 
 div.text-center.card-title.h5 {
-  color: black;
+  color: #22252c;
 }
 
 p.card-text {
   overflow: hidden;
   transition: max-height 0.1s ease;
+  font-family: Roboto;
 }
 
 form#login_form {
@@ -52,24 +112,34 @@ form#login_form {
 nav.Navigation.navbar.navbar-expand-lg.navbar-light {
   padding: 30px;
 }
-a.btn.btn-outline-success {
-  color: black;
-  border-color: black;
-}
 
 div.justify-content-center.nav {
   padding: 50px;
   border-bottom-style: solid;
-  color: black;
+  color: #e14658;
+  font-family: Roboto;
 }
 
 a.nav-link {
-  color: black;
+  color: #22252c;
+  font-family: Roboto;
+}
+
+/* Cards */
+
+.card-footer {
+  border-bottom-style: solid;
+  border: #22252c;
+  font-family: Roboto;
 }
 
 div.jumbotron.jumbotron-fluid {
   align-items: center;
+  background-color: #f4f4f4;
+  color: #22252c;
+  font-family: Roboto;
 }
+
 /* body {
   background-color: #cccbc6;
   font-family: Kumbh Sans;

@@ -64,7 +64,7 @@ function TopicCategory(props) {
   }, [topicCategory]);
 
   return (
-    <div>
+    <div id="articles">
       <NewsList articles={articles} />
     </div>
   );
@@ -90,7 +90,7 @@ function Search(props) {
   }, [query]);
 
   return (
-    <div>
+    <div id="articles">
       <NewsList articles={articles} />
     </div>
   );
@@ -307,25 +307,23 @@ function Login(props) {
     //   </Button>
     // </Form>
     <div name="login">
-      <Form>
-        <form id="login_form" align="center" onSubmit={handleSubmit}>
-          Username:
-          <input
-            value={username}
-            id="username"
-            type="text"
-            onChange={handleUsernameChange}
-          ></input>
-          Password:
-          <input
-            value={password}
-            id="password"
-            type="text"
-            onChange={handlePasswordChange}
-          ></input>
-          <button type="submit"> Login </button>
-        </form>
-      </Form>
+      <form id="login_form" align="center" onSubmit={handleSubmit}>
+        Username:
+        <input
+          value={username}
+          id="username"
+          type="text"
+          onChange={handleUsernameChange}
+        ></input>
+        Password:
+        <input
+          value={password}
+          id="password"
+          type="text"
+          onChange={handlePasswordChange}
+        ></input>
+        <button type="submit"> Login </button>
+      </form>
       <p className="text-center">Create an Account</p>
     </div>
   );
@@ -351,7 +349,7 @@ function Profile(props) {
 
   return loginData.isLoggedIn ? (
     <div>
-      <div className="text-center">
+      <div id="logInJumbotron" className="text-center">
         <Jumbotron fluid>
           <Container>
             <h1>Saved Articles</h1>
@@ -461,7 +459,7 @@ function App() {
     <AuthContext.Provider value={{ loginData, setLoginData }}>
       <Router>
         <div>
-          {alertHtml}
+          {/* {alertHtml} */}
           <Navbar className="Navigation" expand="lg">
             <Navbar.Brand className="Brand">Mindful News</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -484,12 +482,16 @@ function App() {
                   onChange={handleSearchChange}
                 />
                 <LinkContainer to={`/search?q=${searchQuery}`}>
-                  <Button variant="outline-success">Search</Button>
+                  <Button class="btn btn-light">Search</Button>
                 </LinkContainer>
               </Form>
             </Navbar.Collapse>
           </Navbar>
-          <Nav className="justify-content-center" activeKey="/home">
+          <Nav
+            id="secondaryNavigation"
+            className="justify-content-center"
+            activeKey="/home"
+          >
             <Nav.Item>
               <LinkContainer to="/api/topicCategory/business">
                 <Nav.Link>Business</Nav.Link>
