@@ -14,6 +14,8 @@ const { Button } = ReactBootstrap;
 const { Form } = ReactBootstrap;
 const { FormControl } = ReactBootstrap;
 const { Jumbotron, Container } = ReactBootstrap;
+const { Modal } = ReactBootstrap;
+const { Alert } = ReactBootstrap;
 
 // render the homepage of the app, displaying mindfulness articles, a nav bar, and a search bar
 function Homepage() {
@@ -42,29 +44,6 @@ function Homepage() {
 // this component may be used to populate the nav bar
 // may call default categories "default" and custom "custom" to make separate api calls?
 // will have to update user favorite topics once selected
-
-function DropDown() {
-  return (
-    <div className="dropdown">
-      <form>
-        <label>Add Favorite Topic </label>
-        <select id="topics" name="topicCategory">
-          <option value="Business">Business</option>
-          <option value="Entertainment">Entertainment</option>
-          <option value="General">General</option>
-          <option value="Health">Health</option>
-          <option value="Science">Science</option>
-          <option value="Sports">Sports</option>
-          <option value="Technology">Technology</option>
-          <option type="text" value="topicCategory">
-            Custom Favorite
-          </option>
-        </select>
-        <input type="submit" />
-      </form>
-    </div>
-  );
-}
 
 function TopicCategory(props) {
   const { topicCategory } = useParams();
@@ -137,7 +116,7 @@ function NewsList(props) {
   }
 
   return (
-    <div class="container">
+    <div className="container">
       <div className="articleCards">
         <div className="row match-my-cols">
           <div className="col-12">
@@ -399,6 +378,17 @@ function Profile(props) {
 //   alert("Take a deep breath");
 // }, 10000);
 
+function MindfulAlert(props) {
+  return (
+    <div className="text-center">
+      <Alert variant="danger" onClose={props.onAlertClosed} dismissible>
+        <Alert.Heading>Mindfulness Break</Alert.Heading>
+        <p>Take a few deep breaths!</p>
+      </Alert>
+    </div>
+  );
+}
+
 // Context hook, so the user's log in status can be passed to multiple components
 const AuthContext = React.createContext({});
 const useAuthState = () => React.useContext(AuthContext);
@@ -408,6 +398,26 @@ const useAuthState = () => React.useContext(AuthContext);
 // get user's fav topics, add topics to nav bar(append new), update the state
 
 function App() {
+  const [showMindfulMessage, setShowMindfulMessage] = React.useState(false);
+
+  const startTimer = () => {
+    setTimeout(() => {
+      setShowMindfulMessage(true);
+    }, 5000);
+  };
+
+  const onMindfulnessAlertClosed = () => {
+    setShowMindfulMessage(false);
+    startTimer();
+  };
+  const alertHtml = showMindfulMessage ? (
+    <MindfulAlert onAlertClosed={onMindfulnessAlertClosed} />
+  ) : (
+    ""
+  );
+
+  React.useEffect(() => startTimer(), []);
+
   const [loginData, setLoginData] = React.useState({
     isLoggedIn: null,
     userId: null,
@@ -428,7 +438,7 @@ function App() {
   };
 
   let loginLogoutButton;
-  if (loginData.isLoggedIn === true) {
+  if (loginData.isLoggedIn) {
     loginLogoutButton = (
       <LinkContainer to="/">
         <Nav.Link onClick={logout}>Log Out</Nav.Link>
@@ -451,6 +461,7 @@ function App() {
     <AuthContext.Provider value={{ loginData, setLoginData }}>
       <Router>
         <div>
+          {alertHtml}
           <Navbar className="Navigation" expand="lg">
             <Navbar.Brand className="Brand">Mindful News</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
