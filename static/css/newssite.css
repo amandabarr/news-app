@@ -10,6 +10,66 @@
   font-weight: 700;
 }
 
+/* .articleCards {
+  height: 10rem;
+  width: 20rem;
+} */
+/* article */
+div#articles {
+  /* background-color:; */
+  font-family: Roboto;
+  display: flex;
+  padding-top: 80px;
+}
+.card-columns .card {
+  margin-top: 2rem;
+  align-items: center;
+  /* height: 20; */
+}
+
+image.card-image-top {
+  height: auto;
+  max-height: 100px;
+  width: auto;
+  max-width: 100px;
+}
+
+div.text-center.card-title.h5 {
+  color: black;
+}
+
+p.card-text {
+  overflow: hidden;
+  transition: max-height 0.1s ease;
+}
+
+form#login_form {
+  padding: 80px;
+}
+
+/* Search Bar */
+
+nav.Navigation.navbar.navbar-expand-lg.navbar-light {
+  padding: 30px;
+}
+a.btn.btn-outline-success {
+  color: black;
+  border-color: black;
+}
+
+div.justify-content-center.nav {
+  padding: 50px;
+  border-bottom-style: solid;
+  color: black;
+}
+
+a.nav-link {
+  color: black;
+}
+
+div.jumbotron.jumbotron-fluid {
+  align-items: center;
+}
 /* body {
   background-color: #cccbc6;
   font-family: Kumbh Sans;

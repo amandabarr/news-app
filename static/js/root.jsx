@@ -9,10 +9,11 @@ const useLocation = ReactRouterDOM.useLocation;
 const { Navbar } = ReactBootstrap;
 const { Nav, NavDropdown } = ReactBootstrap;
 const { LinkContainer } = ReactRouterBootstrap;
-const { Card, CardColumns } = ReactBootstrap;
+const { Card, CardColumns, Row, Col } = ReactBootstrap;
 const { Button } = ReactBootstrap;
 const { Form } = ReactBootstrap;
 const { FormControl } = ReactBootstrap;
+const { Jumbotron, Container } = ReactBootstrap;
 
 // render the homepage of the app, displaying mindfulness articles, a nav bar, and a search bar
 function Homepage() {
@@ -125,6 +126,7 @@ function NewsList(props) {
         title={article["title"]}
         source={article["source"]["name"]}
         story_link={article["url"]}
+        description={article["description"]}
         image={article["urlToImage"]}
         published={article["publishedAt"]}
         content={article["content"]}
@@ -135,8 +137,16 @@ function NewsList(props) {
   }
 
   return (
-    <div>
-      <CardColumns>{newsList}</CardColumns>
+    <div class="container">
+      <div className="articleCards">
+        <div className="row match-my-cols">
+          <div className="col-12">
+            {/* <div className"column-md-"> */}
+            <CardColumns>{newsList}</CardColumns>
+            {/* </div> */}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -188,15 +198,18 @@ function NewsListItem(props) {
     ? "Remove from Favorites"
     : "Save to Favorites";
   return (
-    <Card className="p-2" style={{ width: "25rem" }}>
+    <Card>
       <a href={props.story_link}>
         <Card.Img variant="top" src={props.image} />
       </a>
       <Card.Body>
         <a href={props.story_link}>
-          <Card.Title>{props.title}</Card.Title>
+          <Card.Title className="text-center">{props.title}</Card.Title>
         </a>
-        <Card.Text>{props.content}</Card.Text>
+        <Card.Text className="text-center">{props.source}</Card.Text>
+        <Card.Text>{props.description}</Card.Text>
+      </Card.Body>
+      <Card.Footer align="center" position="sticky">
         <a
           className="resp-sharing-button__link"
           href={`https://facebook.com/sharer/sharer.php?u=${props.story_link}`}
@@ -237,25 +250,8 @@ function NewsListItem(props) {
         <Button id="favorite" onClick={handleFavorite} variant="primary">
           {favoriteButtonLabel}
         </Button>
-      </Card.Body>
+      </Card.Footer>
     </Card>
-
-    // <div>
-    //   {console.log(props.storyId)}
-    //   <a href={props.story_link}>{props.title}</a>
-    //   <br />
-    //   {props.source}
-    //   <br />
-    //   {props.published}
-    //   <br />
-    //   {articleImage}
-    //   <br />
-    //   {props.content}
-    //   <br />
-    //   <button id="favorite" onClick={handleFavorite}>
-    //     {favoriteButtonLabel}
-    //   </button>
-    // </div>
   );
 }
 
@@ -305,24 +301,53 @@ function Login(props) {
   }
 
   return (
+    //     <Form>
+    //   <Form.Group controlId="formBasicEmail">
+    //     <Form.Label>Username</Form.Label>
+    //     <Form.Control value={username}
+    //           id="username"
+    //           type="text"
+    //           onChange={handleUsernameChange} placeholder="Enter username" />
+    //     <Form.Text className="text-muted">
+    //       We'll never share your email with anyone else.
+    //     </Form.Text>
+    //   </Form.Group>
+
+    //   <Form.Group controlId="formBasicPassword">
+    //     <Form.Label>Password</Form.Label>
+    //     <Form.Control value={password}
+    //           id="password"
+    //           type="text"
+    //           onChange={handlePasswordChange} placeholder="Password" />
+    //   </Form.Group>
+    //   <Form.Group controlId="formBasicCheckbox">
+    //     <Form.Check type="checkbox" label="Check me out" />
+    //   </Form.Group>
+    //   <Button variant="primary" type="submit">
+    //     Submit
+    //   </Button>
+    // </Form>
     <div name="login">
-      <form id="login_form" onSubmit={handleSubmit}>
-        Username:
-        <input
-          value={username}
-          id="username"
-          type="text"
-          onChange={handleUsernameChange}
-        ></input>
-        Password:
-        <input
-          value={password}
-          id="password"
-          type="text"
-          onChange={handlePasswordChange}
-        ></input>
-        <button type="submit"> Login </button>
-      </form>
+      <Form>
+        <form id="login_form" align="center" onSubmit={handleSubmit}>
+          Username:
+          <input
+            value={username}
+            id="username"
+            type="text"
+            onChange={handleUsernameChange}
+          ></input>
+          Password:
+          <input
+            value={password}
+            id="password"
+            type="text"
+            onChange={handlePasswordChange}
+          ></input>
+          <button type="submit"> Login </button>
+        </form>
+      </Form>
+      <p className="text-center">Create an Account</p>
     </div>
   );
 }
@@ -347,10 +372,25 @@ function Profile(props) {
 
   return loginData.isLoggedIn ? (
     <div>
+      <div className="text-center">
+        <Jumbotron fluid>
+          <Container>
+            <h1>Saved Articles</h1>
+          </Container>
+        </Jumbotron>
+      </div>
       <NewsList articles={articles} />
     </div>
   ) : (
-    <p>Please Log In to see your saved articles</p>
+    <div className="text-center">
+      <Jumbotron fluid>
+        <Container>
+          <h1>Welcome</h1>
+          <p>Please log in to see your saved articles.</p>
+        </Container>
+      </Jumbotron>
+    </div>
+    // <p>Please Log In to see your saved articles</p>
   );
 }
 
@@ -419,44 +459,16 @@ function App() {
                 <LinkContainer to="/">
                   <Nav.Link href="/">Home</Nav.Link>
                 </LinkContainer>
-                <LinkContainer to="/api/topicCategory">
-                  <Nav.Link> General </Nav.Link>
-                </LinkContainer>
                 <LinkContainer to="/api/profile">
                   <Nav.Link> Profile </Nav.Link>
                 </LinkContainer>
                 {loginLogoutButton}
-                <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                  <LinkContainer to="/api/topicCategory/business">
-                    <NavDropdown.Item>Business</NavDropdown.Item>
-                  </LinkContainer>
-                  <LinkContainer to="/api/topicCategory/entertainment">
-                    <NavDropdown.Item>Entertainment</NavDropdown.Item>
-                  </LinkContainer>
-                  <LinkContainer to="/api/topicCategory/general">
-                    <NavDropdown.Item>General</NavDropdown.Item>
-                  </LinkContainer>
-                  <LinkContainer to="/api/topicCategory/health">
-                    <NavDropdown.Item>Health</NavDropdown.Item>
-                  </LinkContainer>
-                  <LinkContainer to="/api/topicCategory/science">
-                    <NavDropdown.Item>Science</NavDropdown.Item>
-                  </LinkContainer>
-                  <LinkContainer to="/api/topicCategory/sports">
-                    <NavDropdown.Item>Sports</NavDropdown.Item>
-                  </LinkContainer>
-                  <LinkContainer to="/api/topicCategory/technology">
-                    <NavDropdown.Item>Technology</NavDropdown.Item>
-                  </LinkContainer>
-                  <NavDropdown.Divider />
-                </NavDropdown>
-
-                {/* <Nav.Link href="/api/profile">Profile</Nav.Link> */}
               </Nav>
               <Form inline>
                 <FormControl
+                  title="Topics"
                   type="text"
-                  placeholder="Search a Topic"
+                  placeholder="Search"
                   className="mr-sm-2"
                   onChange={handleSearchChange}
                 />
@@ -466,6 +478,43 @@ function App() {
               </Form>
             </Navbar.Collapse>
           </Navbar>
+          <Nav className="justify-content-center" activeKey="/home">
+            <Nav.Item>
+              <LinkContainer to="/api/topicCategory/business">
+                <Nav.Link>Business</Nav.Link>
+              </LinkContainer>
+            </Nav.Item>
+            <Nav.Item>
+              <LinkContainer to="/api/topicCategory/entertainment">
+                <Nav.Link>Entertainment</Nav.Link>
+              </LinkContainer>
+            </Nav.Item>
+            <Nav.Item>
+              <LinkContainer to="/api/topicCategory/general">
+                <Nav.Link>General</Nav.Link>
+              </LinkContainer>
+            </Nav.Item>
+            <Nav.Item>
+              <LinkContainer to="/api/topicCategory/health">
+                <Nav.Link>Health</Nav.Link>
+              </LinkContainer>
+            </Nav.Item>
+            <Nav.Item>
+              <LinkContainer to="/api/topicCategory/science">
+                <Nav.Link>Science</Nav.Link>
+              </LinkContainer>
+            </Nav.Item>
+            <Nav.Item>
+              <LinkContainer to="/api/topicCategory/sports">
+                <Nav.Link>Sports</Nav.Link>
+              </LinkContainer>
+            </Nav.Item>
+            <Nav.Item>
+              <LinkContainer to="/api/topicCategory/technology">
+                <Nav.Link>Technology</Nav.Link>
+              </LinkContainer>
+            </Nav.Item>
+          </Nav>
           <Switch>
             <Route path="/api/profile">
               <Profile />
