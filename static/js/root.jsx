@@ -41,10 +41,6 @@ function Homepage() {
   );
 }
 
-// this component may be used to populate the nav bar
-// may call default categories "default" and custom "custom" to make separate api calls?
-// will have to update user favorite topics once selected
-
 function TopicCategory(props) {
   const { topicCategory } = useParams();
 
@@ -101,16 +97,16 @@ function NewsList(props) {
   for (const article of props.articles) {
     newsList.push(
       <NewsListItem
-        key={article["storyId"]}
-        title={article["title"]}
-        source={article["source"]["name"]}
-        story_link={article["url"]}
-        description={article["description"]}
-        image={article["urlToImage"]}
-        published={article["publishedAt"]}
-        content={article["content"]}
-        storyId={article["storyId"]}
-        favorite={article["favorite"]}
+        key={article.storyId}
+        title={article.title}
+        source={article.source.name}
+        storyLink={article.url}
+        description={article.description}
+        image={article.urlToImage}
+        published={article.publishedAt}
+        content={article.content}
+        storyId={article.storyId}
+        favorite={article.favorite}
       />
     );
   }
@@ -178,11 +174,11 @@ function NewsListItem(props) {
     : "Save to Favorites";
   return (
     <Card>
-      <a href={props.story_link}>
+      <a href={props.storyLink}>
         <Card.Img variant="top" src={props.image} />
       </a>
       <Card.Body>
-        <a href={props.story_link}>
+        <a href={props.storyLink}>
           <Card.Title className="text-center">{props.title}</Card.Title>
         </a>
         <Card.Text className="text-center">{props.source}</Card.Text>
@@ -191,7 +187,7 @@ function NewsListItem(props) {
       <Card.Footer align="center" position="sticky">
         <a
           className="resp-sharing-button__link"
-          href={`https://facebook.com/sharer/sharer.php?u=${props.story_link}`}
+          href={`https://facebook.com/sharer/sharer.php?u=${props.storyLink}`}
           target="_blank"
           rel="noopener"
           aria-label=""
@@ -210,7 +206,7 @@ function NewsListItem(props) {
 
         <a
           className="resp-sharing-button__link"
-          href={`https://twitter.com/intent/tweet/?url=${props.story_link}`}
+          href={`https://twitter.com/intent/tweet/?url=${props.storyLink}`}
           target="_blank"
           rel="noopener"
           aria-label=""
@@ -262,13 +258,13 @@ function Login(props) {
     })
       .then((response) => response.json())
       .then((data) => {
-        setUserName(data["username"]);
-        setPassword(data["password"]);
-        setUserId(data["user_id"]);
+        setUserName(data.username);
+        setPassword(data.password);
+        setUserId(data.user_id);
         console.log(userId);
         setLoginData({
-          isLoggedIn: data["logged_in"],
-          userId: data["user_id"],
+          isLoggedIn: data.logged_in,
+          userId: data.user_id,
           favoriteTopics: data.favoriteTopics,
         });
       });
@@ -281,7 +277,7 @@ function Login(props) {
 
   return (
     <div name="login">
-      <form id="login_form" align="center" onSubmit={handleSubmit}>
+      <form id="loginForm" align="center" onSubmit={handleSubmit}>
         Username:
         <input
           value={username}
@@ -313,7 +309,7 @@ function Profile(props) {
   };
 
   React.useEffect(() => {
-    fetch(`/api/profile_stories?userId=${loginData["userId"]}`)
+    fetch(`/api/profile_stories?userId=${loginData.userId}`)
       .then((response) => response.json())
       .then((articles) => {
         console.log(articles);
@@ -371,7 +367,7 @@ function App() {
   const startTimer = () => {
     setTimeout(() => {
       setShowMindfulMessage(true);
-    }, 5000);
+    }, 60000);
   };
 
   const onMindfulnessAlertClosed = () => {
@@ -429,7 +425,6 @@ function App() {
     <AuthContext.Provider value={{ loginData, setLoginData }}>
       <Router>
         <div>
-          {alertHtml}
           <Navbar className="Navigation" expand="lg">
             <Navbar.Brand className="Brand">Mindful News</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -452,7 +447,7 @@ function App() {
                   onChange={handleSearchChange}
                 />
                 <LinkContainer to={`/search?q=${searchQuery}`}>
-                  <Button class="btn btn-light">Search</Button>
+                  <Button className="btn btn-light">Search</Button>
                 </LinkContainer>
               </Form>
             </Navbar.Collapse>
@@ -498,6 +493,7 @@ function App() {
               </LinkContainer>
             </Nav.Item>
           </Nav>
+          {alertHtml}
           <Switch>
             <Route path="/api/profile">
               <Profile />
@@ -526,10 +522,6 @@ function useQuery() {
 }
 
 ReactDOM.render(<App />, document.getElementById("root"));
-
-// inconsistencies between snake_case and camelCase - story_link vs storyId
-
-// article["storyId"] vs *article.storyId*
 
 // api naming - /remove vs /save_article - use REST
 
