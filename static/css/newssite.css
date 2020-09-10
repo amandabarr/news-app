@@ -40,6 +40,7 @@
 #secondaryNavigation .activen.nav-link {
   color: #22252c;
   font-family: Roboto;
+  font-weight: 700;
 }
 
 .Brand {
@@ -83,7 +84,7 @@ div#articles {
 
 .card {
   color: #22252c;
-  font-family: Roboto;
+  font-family: Kumbh Sans;
 }
 
 image.card-image-top {

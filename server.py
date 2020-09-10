@@ -37,6 +37,7 @@ def get_news_articles():
        'q=mindfulness&'
        'from=' + TODAY +'&'
        'language=en&'
+       'pageSize=40&'
        'sortBy=publishedAt&'
        'sortBy=relevancy&'
        'apiKey=' + API_SECRET_KEY)
@@ -97,6 +98,7 @@ def fetch_stories():
        'q=mindfulness&'
        'from=' + TODAY +'&'
        'language=en&'
+       'pageSize=40&'
        'sortBy=publishedAt&'
        'sortBy=relevancy&'
        'apiKey=' + API_SECRET_KEY)
@@ -126,6 +128,7 @@ def topic_search():
     url = ('http://newsapi.org/v2/everything?'
         'q=' + topic_keyword + '&' +
         'from=' + TODAY +'&'
+        'pageSize=40&'
         'sortBy=publishedAt&'
         'apiKey=' + API_SECRET_KEY)
 
@@ -182,7 +185,7 @@ def category_article_search():
 
     topicCategory = request.args["topicCategory"]
 
-    url = ('https://newsapi.org/v2/top-headlines?country=us&category=' + topicCategory + '&apiKey=' + API_SECRET_KEY)
+    url = ('https://newsapi.org/v2/top-headlines?country=us&category=' + topicCategory + '&pageSize=40&apiKey=' + API_SECRET_KEY)
 
     response = requests.get(url)
 
