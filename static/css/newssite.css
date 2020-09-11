@@ -4,7 +4,7 @@
   font-family: Roboto;
   color: #f4f4f4;
 }
-.Navigation.navbar.navbar-expand-lg.navbar-light {
+.Navigation.navbar.navbar-expand-lg.navbar-dark {
   color: #f4f4f4;
   font-family: Roboto;
 }
@@ -12,14 +12,20 @@
 .navbar-light .navbar-brand {
   color: #f4f4f4;
   font-family: Roboto;
+  font-size: xx-large;
 }
 
-.navbar-light .navbar-brand:hover {
+.navbar-dark .navbar-brand {
   color: #f4f4f4;
   font-family: Roboto;
 }
 
-.navbar-light .navbar-nav .nav-link {
+.navbar-dark .navbar-brand:hover {
+  color: #f4f4f4;
+  font-family: Roboto;
+}
+
+.navbar-dark .navbar-nav .nav-link {
   color: #f4f4f4;
   font-family: Roboto;
 }
@@ -34,24 +40,24 @@
   font-family: Roboto;
 }
 
-.navbar-light .nav-link:hover {
+.navbar-dark .nav-link:hover {
   color: #f4f4f4;
 }
 
-.navbar-light .navbar-nav .nav-link:hover {
-  color: #f4f4f4;
-  font-family: Roboto;
-}
-
-.navbar-light .navbar-nav .nav-link:any-link {
+.navbar-dark .navbar-nav .nav-link:hover {
   color: #f4f4f4;
   font-family: Roboto;
 }
 
-.navbar-light .navbar-nav .active > .nav-link,
-.navbar-light .navbar-nav .nav-link.active,
-.navbar-light .navbar-nav .nav-link.show,
-.navbar-light .navbar-nav .show > .nav-link {
+.navbar-dark .navbar-nav .nav-link:any-link {
+  color: #f4f4f4;
+  font-family: Roboto;
+}
+
+.navbar-dark .navbar-nav .active > .nav-link,
+.navbar-dark .navbar-nav .nav-link.active,
+.navbar-dark .navbar-nav .nav-link.show,
+.navbar-dark .navbar-nav .show > .nav-link {
   font-family: Roboto;
   color: #f4f4f4;
   font-weight: 700;
@@ -64,7 +70,7 @@
 }
 
 .Brand {
-  font-family: Roboto;
+  font-family: "Montserrat", sans-serif;
   color: #f4f4f4;
   font-weight: 700;
 }
@@ -152,11 +158,23 @@ div#loginForm {
 }
 
 div#loginForm input {
-  width: 100%;
+  width: 20%;
 }
 
 p#createAccount {
   padding: 80px;
+}
+
+input#username {
+  text-align: center;
+  align-items: center;
+  /* align-content: center; */
+}
+
+input#password {
+  text-align: center;
+  align-items: center;
+  /* align-content: center; */
 }
 
 /* Search Bar */
@@ -182,6 +200,14 @@ a.active.nav-link {
   color: #e14658;
   font-family: Roboto;
   font-size: large;
+}
+
+.navbar-light .navbar-toggler-icon {
+  color: #f4f4f4;
+}
+
+.navbar-light .navbar-toggler {
+  color: #f4f4f4;
 }
 
 /* Jumbotron - Profile Page */

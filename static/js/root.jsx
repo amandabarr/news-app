@@ -283,22 +283,28 @@ function Login(props) {
     <div id="loginForm" name="login">
       <form align="center" onSubmit={handleSubmit}>
         Username:
-        <input
-          value={username}
-          id="username"
-          type="text"
-          align="center"
-          onChange={handleUsernameChange}
-        ></input>
+        <div>
+          <input
+            value={username}
+            id="username"
+            type="text"
+            align="center"
+            onChange={handleUsernameChange}
+          ></input>
+        </div>
         Password:
-        <input
-          value={password}
-          id="password"
-          type="password"
-          align="center"
-          onChange={handlePasswordChange}
-        ></input>
-        <button type="submit"> Login </button>
+        <div>
+          <input
+            value={password}
+            id="password"
+            type="password"
+            align="center"
+            onChange={handlePasswordChange}
+          ></input>
+        </div>
+        <button id="loginButton" type="submit">
+          Login
+        </button>
       </form>
       <p id="createAccount" className="text-center">
         Create an Account
@@ -446,7 +452,7 @@ function App() {
     <AuthContext.Provider value={{ loginData, setLoginData }}>
       <Router>
         <div>
-          <Navbar className="Navigation" expand="lg">
+          <Navbar className="Navigation" variant="dark" expand="lg">
             <Navbar.Brand className="Brand">Mindful News</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
