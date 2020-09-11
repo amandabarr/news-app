@@ -95,7 +95,7 @@ def fetch_stories():
     """Return news stories as JSON"""
 
     url = ('http://newsapi.org/v2/everything?'
-       'q=mindfulness&'
+       'q=peace&'
        'from=' + TODAY +'&'
        'language=en&'
        'pageSize=25&'

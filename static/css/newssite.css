@@ -35,11 +35,16 @@
 }
 
 .navbar-light .nav-link:hover {
-  color: orange;
+  color: #f4f4f4;
 }
 
 .navbar-light .navbar-nav .nav-link:hover {
-  color: orange;
+  color: #f4f4f4;
+  font-family: Roboto;
+}
+
+.navbar-light .navbar-nav .nav-link:any-link {
+  color: #f4f4f4;
   font-family: Roboto;
 }
 
@@ -104,7 +109,7 @@ div#articles {
   font-family: Kumbh Sans;
 }
 
-.card-footer {
+div.cardFooter.card-footer {
   border-bottom-style: solid;
   border: #22252c;
   font-family: Roboto;
@@ -112,7 +117,7 @@ div#articles {
 
 image.card-image-top {
   height: auto;
-  max-height: 100px;
+  max-height: 110px;
   width: auto;
   max-width: 100px;
 }
@@ -127,7 +132,30 @@ p.card-text {
   font-family: Roboto;
 }
 
-form#login_form {
+div.text-center.card-title.h5 {
+  font-weight: bold;
+}
+
+p#articleSource.text-center.card-text {
+  /* font-weight: bold; */
+  color: #e14658;
+}
+
+div#loginForm {
+  background: #f4f4f4;
+  padding: 80px;
+  text-align: center;
+  align-items: center;
+  align-content: center;
+  color: #22252c;
+  font-family: "Montserrat", sans-serif;
+}
+
+div#loginForm input {
+  width: 100%;
+}
+
+p#createAccount {
   padding: 80px;
 }
 

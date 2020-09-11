@@ -179,12 +179,16 @@ function NewsListItem(props) {
       </a>
       <Card.Body>
         <a href={props.storyLink}>
-          <Card.Title className="text-center">{props.title}</Card.Title>
+          <Card.Title id="articleTitle" className="text-center">
+            {props.title}
+          </Card.Title>
         </a>
-        <Card.Text className="text-center">{props.source}</Card.Text>
-        <Card.Text>{props.description}</Card.Text>
+        <Card.Text id="articleSource" className="text-center">
+          {props.source}
+        </Card.Text>
+        <Card.Text id="articleDescription">{props.description}</Card.Text>
       </Card.Body>
-      <Card.Footer align="center" position="sticky">
+      <Card.Footer id="cardFooter" align="center" position="sticky">
         <a
           className="resp-sharing-button__link"
           href={`https://facebook.com/sharer/sharer.php?u=${props.storyLink}`}
@@ -276,25 +280,29 @@ function Login(props) {
   }
 
   return (
-    <div name="login">
-      <form id="loginForm" align="center" onSubmit={handleSubmit}>
+    <div id="loginForm" name="login">
+      <form align="center" onSubmit={handleSubmit}>
         Username:
         <input
           value={username}
           id="username"
           type="text"
+          align="center"
           onChange={handleUsernameChange}
         ></input>
         Password:
         <input
           value={password}
           id="password"
-          type="text"
+          type="password"
+          align="center"
           onChange={handlePasswordChange}
         ></input>
         <button type="submit"> Login </button>
       </form>
-      <p className="text-center">Create an Account</p>
+      <p id="createAccount" className="text-center">
+        Create an Account
+      </p>
     </div>
   );
 }
@@ -346,11 +354,15 @@ function MindfulAlert(props) {
   return (
     // React fragment
 
-    <Modal show={props.showMindfulMessage} onHide={props.onAlertClosed}>
+    <Modal
+      className="text-center"
+      show={props.showMindfulMessage}
+      onHide={props.onAlertClosed}
+    >
       <Modal.Header closeButton>
-        <Modal.Title>Modal heading</Modal.Title>
+        <Modal.Title>Mindful Break</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+      <Modal.Body>Take a moment to be still and notice your breath.</Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={props.onAlertClosed}>
           Close
@@ -381,7 +393,7 @@ function App() {
   const startTimer = () => {
     setTimeout(() => {
       setShowMindfulMessage(true);
-    }, 10000000);
+    }, 60000);
   };
 
   const onMindfulnessAlertClosed = () => {
