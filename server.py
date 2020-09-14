@@ -14,7 +14,6 @@ from jinja2 import StrictUndefined
 
 API_SECRET_KEY = os.environ.get('API_KEY')
 TODAY = date.today().strftime("%Y-/%m-/%d")
-# NOW = datetime.now()
 
 newsapi = NewsApiClient(api_key=API_SECRET_KEY)
 
@@ -22,7 +21,6 @@ newsapi = NewsApiClient(api_key=API_SECRET_KEY)
 
 app = Flask(__name__)
 app.secret_key = 'dev'
-# app.permanent_session_lifetime = False
 app.jinja_env.undefined = StrictUndefined
 
 
@@ -48,8 +46,6 @@ def get_news_articles():
 
     articles = response_json['articles']
 
-    # articles = save_article_to_db(articles)
-
     user = session.get("user_id", 0)
     save_article_to_db(articles, user)
 
@@ -60,25 +56,20 @@ def get_news_articles():
 
     return jsonify(articles)
 
-@app.route("/api/login", methods = ["GET", "POST"])
+@app.route("/api/login", methods = ["POST", "GET"])
 def user_login():
     """Allow user to log in to their existing account"""
 
-    username = request.args["username"]
+    print("I am testing RestAPI")
 
-    password = request.args["password"]
+    username = request.form.get("username")
+
+    password = request.form.get("password")
 
     user = crud.get_user(username, password)
 
-    print(user)
     if user:
-        print(f"User {user}")
-        session["user_id"] = user.user_id
-        session["logged_in"] = True
-        # session["favorite_topics"]
-        # session["user"] = username
-        # session["password"] = password
-        # session["user_id"] = user.user_id
+
         return jsonify({
             'user': username,
             'password': password,
@@ -86,8 +77,7 @@ def user_login():
             'logged_in': True,
             "favoriteTopics": ['Wellness', 'Yoga']
         })
-    else:
-        return "error - this is not working"
+
 
 
 @app.route("/api/stories")
@@ -112,8 +102,6 @@ def fetch_stories():
     user = session.get("user_id", 0)
 
     articles = save_article_to_db(articles, user)
-
-
 
     return jsonify(articles)
 
@@ -170,14 +158,6 @@ def save_article_to_db(articles, userId):
 
         article["favorite"] = saved_story != None
 
-        # user = session["user_id"]
-
-        # saved_story = crud.get_saved_stories_by_user(user)
-
-        # for story in saved_story:
-        #     print(saved_story)
-        #     article["favorite"] = saved_story != None
-
     return articles
 
 @app.route("/topicCategory", methods=["GET", "POST"])
@@ -197,35 +177,13 @@ def category_article_search():
 
     articles = save_article_to_db(articles, user)
 
-    # topic = crud.get_topic(topicCategory)
-
-    # if not topic:
-    #     crud.create_topic(topicCategory)
-
-    # crud.save_topic(user, topic.topic_id)
-
 
     return jsonify(articles)
 
 
-
-def save_topic():
-    pass
-
-
-
-# @app.route("/api/favorites", methods = ["GET", "POST", "DELETE"])
-# def favorites_api():
-#     if (this.method == "GET") -> list favorites
-#     if (this.method == "POST") -> create favorites
-#     if (this.method == "DELETE") -> delete favorites
-
 @app.route("/api/save_article", methods = ["GET", "POST"])
 def save_article_to_favorites():
-# make it so that you have to be logged in
-    # if !session["user_id"]
-    #     return jsonify({"success": False, message: "You must be logged in" })
-    # crud function to save article under specific user.  Need to get primary keys user_id and story_id and option to comment/tag
+
     story_id = request.args["storyId"]
     print(story_id)
     user = session.get("user_id", 0)
@@ -285,15 +243,6 @@ def remove_from_favorites():
     return jsonify({"success": True})
 
 
-
-
-
-# @app.route("/api/user", methods = ["GET"])
-# def user_api():
-#     """Allow user to log in or option to create new account"""
-#     # { name: 'Amanda', topics: ['Cats', 'Dogs', 'Business'] }
-#     return session
-
 @app.route("/api/logout")
 def user_logout():
     user = session.get("user_id")
@@ -303,10 +252,8 @@ def user_logout():
 
     session.pop("user_id")
     session.pop("logged_in")
-    # session.pop("favoriteTopics")
     print(f"Now The current user information is: {session.keys()}")
 
-    # return (f"user_id: {user_id}")
 
     return jsonify({
             "success": True})

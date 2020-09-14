@@ -239,6 +239,7 @@ function Login(props) {
   const [username, setUserName] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [userId, setUserId] = React.useState("");
+
   const { loginData, setLoginData } = React.useContext(AuthContext);
   console.log("login AuthContext", loginData);
 
@@ -256,8 +257,14 @@ function Login(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(username, password);
-    fetch(`/api/login?username=${username}&password=${password}`, {
+
+    const formdata = new FormData();
+    formdata.append("username", username);
+    formdata.append("password", password);
+
+    fetch("/api/login", {
       method: "POST",
+      body: formdata,
       credentials: "include",
     })
       .then((response) => response.json())
