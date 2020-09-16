@@ -17,7 +17,6 @@ const { Jumbotron, Container } = ReactBootstrap;
 const { Modal } = ReactBootstrap;
 const { Alert } = ReactBootstrap;
 
-// render the homepage of the app, displaying mindfulness articles, a nav bar, and a search bar
 function Homepage() {
   const [articles, setArticles] = React.useState([]);
   console.log(AuthContext);
@@ -135,18 +134,10 @@ function NewsListItem(props) {
     articleImage = <div>No image</div>;
   }
 
-  // a user can save an article to their favorites, or remove a saved article
-  // if user is not logged in, alert notifies user to login to save an article
   const [isFavorite, setIsFavorite] = React.useState(props.favorite);
   const handleFavorite = (event) => {
     event.preventDefault();
     if (loginData.isLoggedIn) {
-      // GET /api/favorites - list a user's favorites
-      // use this for profile
-      // POST /api/favorites - create a favorite
-      // - fetch(`/api/favorites?storyId=${props.storyId}`, { method: 'POST' });
-      // DELETE /api/favorites - deletes a favorite
-      // - fetch(`/api/favorites?storyId=${props.storyId}`, { method: 'DELETE' })
       if (isFavorite) {
         fetch(`/api/remove_article?storyId=${props.storyId}`)
           .then((response) => response.json())
@@ -257,7 +248,10 @@ function Login(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(username, password);
-
+    // fetch(`/api/login?username=${username}&password=${password}`, {
+    //   method: "POST",
+    //   credentials: "include",
+    // })
     const formdata = new FormData();
     formdata.append("username", username);
     formdata.append("password", password);
@@ -365,8 +359,6 @@ function Profile(props) {
 
 function MindfulAlert(props) {
   return (
-    // React fragment
-
     <Modal
       className="text-center"
       show={props.showMindfulMessage}
@@ -382,23 +374,11 @@ function MindfulAlert(props) {
         </Button>
       </Modal.Footer>
     </Modal>
-
-    // <div className="text-center">
-    //   <Alert variant="dark" onClose={props.onAlertClosed} dismissible>
-    //     <Alert.Heading>Mindfulness Break</Alert.Heading>
-    //     <p>Take a few deep breaths!</p>
-    //   </Alert>
-    // </div>
   );
 }
 
-// Context hook, so the user's log in status can be passed to multiple components
 const AuthContext = React.createContext({});
 const useAuthState = () => React.useContext(AuthContext);
-
-// nav bar component  set state [{home: /}, {login: /login}, profile{route: /profile, title: profile}]
-//map over state (built-in method for arrays),
-// get user's fav topics, add topics to nav bar(append new), update the state
 
 function App() {
   const [showMindfulMessage, setShowMindfulMessage] = React.useState(false);
@@ -406,7 +386,7 @@ function App() {
   const startTimer = () => {
     setTimeout(() => {
       setShowMindfulMessage(true);
-    }, 60000);
+    }, 120000);
   };
 
   const onMindfulnessAlertClosed = () => {
@@ -559,15 +539,3 @@ function useQuery() {
 }
 
 ReactDOM.render(<App />, document.getElementById("root"));
-
-// api naming - /remove vs /save_article - use REST
-
-// early if returns for logged in states
-
-// does save_article check if the user is logged in?
-// - maybe this could handle the alert
-
-// /login?username=${username}&password=${password}
-// - should be done as a POST
-
-// /profile_stories should not accept userId, it should fetch it from the session

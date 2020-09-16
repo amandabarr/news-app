@@ -32,7 +32,7 @@ def root():
 @app.route("/api/top-news")
 def get_news_articles():
     url = ('http://newsapi.org/v2/everything?'
-       'q=mindfulness&'
+       'q=meditation&'
        'from=' + TODAY +'&'
        'language=en&'
        'pageSize=25&'
@@ -60,7 +60,9 @@ def get_news_articles():
 def user_login():
     """Allow user to log in to their existing account"""
 
-    print("I am testing RestAPI")
+    # username = request.args["username"]
+
+    # password = request.args["password"]
 
     username = request.form.get("username")
 
@@ -69,6 +71,10 @@ def user_login():
     user = crud.get_user(username, password)
 
     if user:
+        session["logged_in"] = True
+        session["user"] = username
+        session["password"] = password
+        session["user_id"] = user.user_id
 
         return jsonify({
             'user': username,
@@ -77,33 +83,6 @@ def user_login():
             'logged_in': True,
             "favoriteTopics": ['Wellness', 'Yoga']
         })
-
-
-
-@app.route("/api/stories")
-def fetch_stories():
-    """Return news stories as JSON"""
-
-    url = ('http://newsapi.org/v2/everything?'
-       'q=peace&'
-       'from=' + TODAY +'&'
-       'language=en&'
-       'pageSize=25&'
-       'sortBy=publishedAt&'
-       'sortBy=relevancy&'
-       'apiKey=' + API_SECRET_KEY)
-
-    response = requests.get(url)
-
-    response_json = response.json()
-
-    articles = response_json['articles']
-
-    user = session.get("user_id", 0)
-
-    articles = save_article_to_db(articles, user)
-
-    return jsonify(articles)
 
 
 @app.route("/api/search", methods=["GET", "POST"])
@@ -250,9 +229,10 @@ def user_logout():
     favorite_topics = session.get("favoriteTopics")
     print(f"The current user information is: {session.keys()}")
 
-    session.pop("user_id")
-    session.pop("logged_in")
-    print(f"Now The current user information is: {session.keys()}")
+    if user:
+        session.pop("user_id")
+        session.pop("logged_in")
+        print(f"Now The current user information is: {session.keys()}")
 
 
     return jsonify({
